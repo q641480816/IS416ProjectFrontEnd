@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.is416.smujio.MainActivity"
+    tools:context="com.is416.smujio.LandingActivity"
     android:orientation="vertical"
     android:background="@color/colorPrimary">
 
@@ -13,13 +13,15 @@
         android:id="@+id/logo_frame"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
         android:gravity="center">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/logo"/>
+            <ImageView
+                android:id="@+id/test"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@mipmap/logo"/>
 
     </LinearLayout>
 
@@ -27,7 +29,9 @@
         android:id="@+id/action_frame"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="0"
+        android:alpha="0">
 
         <Button
             android:id="@+id/register"

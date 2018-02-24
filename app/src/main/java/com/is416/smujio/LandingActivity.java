@@ -1,20 +1,15 @@
 package com.is416.smujio;
 
 import android.animation.ValueAnimator;
-import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.is416.smujio.util.General;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-public class MainActivity extends AppCompatActivity {
+public class LandingActivity extends AppCompatActivity {
 
     private LinearLayout main_frame;
     private LinearLayout logo_frame;
@@ -25,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_landing);
 
         bindView();
         init();
@@ -41,24 +36,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init(){
+        login();
+    }
+
+    private void login(){
         //TODO Login
         if (General.token != null){
 
         }else{
-            int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-            final int h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-            action_frame.measure(w, h);
-            final int height = action_frame.getMeasuredHeight();
-            WindowManager wm = (WindowManager) this .getSystemService(Context.WINDOW_SERVICE);
-            final int sHeight = wm.getDefaultDisplay().getHeight();
-            Timer timer = new Timer(true);
-            timer.schedule(new TimerTask() {
-                public void run() {
-                    ValueAnimator anim = ValueAnimator.ofInt(sHeight, sHeight - height);
-                    anim.setDuration(500)
+            ValueAnimator anim = ValueAnimator.ofFloat(0f,1.25f);
+            anim.setDuration(1000);
+            anim.setStartDelay(2500);
+            //anim.setRepeatCount(0);
+            anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    float currentValue = (float) animation.getAnimatedValue();
+                    action_frame.setLayoutParams(new LinearLayout.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,0,currentValue));
+                    action_frame.setAlpha(currentValue);
+                    action_frame.requestLayout();
                 }
-            }, 3000);
-
+            });
+            anim.start();
         }
     }
 
