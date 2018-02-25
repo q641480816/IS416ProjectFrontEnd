@@ -71,61 +71,7 @@ public class LandingActivity extends AppCompatActivity {
 
     private void init(){
         imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        login();
-    }
-
-    private void login(){
-        //TODO Login
-        if (!SharedPreferenceManager.get(General.EMAIL, mContext).equals(SharedPreferenceManager.nullable) &&  !SharedPreferenceManager.get(General.PERSIST, mContext).equals(SharedPreferenceManager.nullable)){
-            String email = SharedPreferenceManager.get(General.EMAIL, mContext);
-            String password = SharedPreferenceManager.get(General.PASSWORD, mContext);
-            try {
-                JSONObject body = new JSONObject();
-                body.put("email", email);
-                body.put("password", password);
-                General.httpRequest(mContext, General.HTTP_POST, "/login",body,false, new JsonHttpResponseHandler(){
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        try {
-                            switch (response.getInt(General.HTTP_STATUS_KEY)){
-                                case General.HTTP_SUCCESS:
-                                    JSONObject data = response.getJSONObject(General.HTTP_DATA_KEY);
-                                    logUser(data, email, password, false);
-                                    break;
-                                case General.HTTP_EXCEPTION:
-                                    General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
-                                    break;
-                                case General.HTTP_FAIL:
-                                    General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        super.onFailure(statusCode, headers, throwable, errorResponse);
-                        General.makeToast(mContext, mContext.getResources().getText(R.string.unknown_error).toString());
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }else{
-            ValueAnimator anim = ValueAnimator.ofFloat(0f,1.25f);
-            anim.setDuration(1000);
-            anim.setStartDelay(2500);
-            //anim.setRepeatCount(0);
-            anim.addUpdateListener(animation -> {
-                float currentValue = (float) animation.getAnimatedValue();
-                action_frame.setLayoutParams(new LinearLayout.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,0,currentValue));
-                action_frame.setAlpha(currentValue);
-                action_frame.requestLayout();
-            });
-            anim.start();
-        }
+        loginCheck();
     }
 
     private void addListeners(){
@@ -143,6 +89,29 @@ public class LandingActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void loginCheck(){
+        //TODO Login
+        if (!SharedPreferenceManager.get(General.EMAIL, mContext).equals(SharedPreferenceManager.nullable) &&  !SharedPreferenceManager.get(General.PERSIST, mContext).equals(SharedPreferenceManager.nullable)){
+            String email = SharedPreferenceManager.get(General.EMAIL, mContext);
+            String password = SharedPreferenceManager.get(General.PASSWORD, mContext);
+            login(email, password, false);
+        }else{
+            ValueAnimator anim = ValueAnimator.ofFloat(0f,1.25f);
+            anim.setDuration(1000);
+            anim.setStartDelay(2500);
+            //anim.setRepeatCount(0);
+            anim.addUpdateListener(animation -> {
+                float currentValue = (float) animation.getAnimatedValue();
+                action_frame.setLayoutParams(new LinearLayout.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,0,currentValue));
+                action_frame.setAlpha(currentValue);
+                action_frame.requestLayout();
+            });
+            anim.start();
+        }
+    }
+
+
 
     private void chooseAction(boolean isNew){
         this.switchAction.setText(isNew ? getResources().getText(R.string.switch_action_new) : getResources().getText(R.string.switch_action_exist));
@@ -187,24 +156,26 @@ public class LandingActivity extends AppCompatActivity {
         String password = this.password.getText().toString();
         boolean isLogin = action.equals(getResources().getText(R.string.login));
 
+        if (isLogin){
+            login(email, password, true);
+        }else {
+            register(email, password);
+        }
+    }
+
+    private void register(String email, String password){
         try {
             JSONObject body = new JSONObject();
             body.put("email", email);
             body.put("password", password);
-            General.httpRequest(mContext, General.HTTP_POST, isLogin?"/login":"/createUser",body,false, new JsonHttpResponseHandler(){
+            General.httpRequest(mContext, General.HTTP_POST, "/createUser",body,false, new JsonHttpResponseHandler(){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
                     try {
                         switch (response.getInt(General.HTTP_STATUS_KEY)){
                             case General.HTTP_SUCCESS:
-                                JSONObject data = response.getJSONObject(General.HTTP_DATA_KEY);
-                                if (isLogin){
-                                    //Token
-                                    logUser(data, email, password, true);
-                                }else {
-
-                                }
+                                login(email, password, true);
                                 break;
                             case General.HTTP_EXCEPTION:
                                 General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
@@ -228,17 +199,50 @@ public class LandingActivity extends AppCompatActivity {
         }
     }
 
-    private void logUser(JSONObject data, String email, String password, boolean isToLocal) throws JSONException {
-        General.token = data.getString("secret");
-        General.email = email;
-        General.user = data.getJSONObject("user");
-        if (isToLocal){
-            HashMap<String, String> values = new HashMap<>();
-            values.put(General.EMAIL, email);
-            values.put(General.PASSWORD, password);
-            values.put(General.PERSIST, "TRUE");
-            SharedPreferenceManager.saveMultiple(values, mContext);
+    private void login(String email, String password, boolean isToLocal){
+        try {
+            JSONObject body = new JSONObject();
+            body.put("email", email);
+            body.put("password", password);
+            General.httpRequest(mContext, General.HTTP_POST, "/login",body,false, new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    try {
+                        switch (response.getInt(General.HTTP_STATUS_KEY)){
+                            case General.HTTP_SUCCESS:
+                                JSONObject data = response.getJSONObject(General.HTTP_DATA_KEY);
+                                General.token = data.getString("secret");
+                                General.email = email;
+                                General.user = data.getJSONObject("user");
+                                if (isToLocal){
+                                    HashMap<String, String> values = new HashMap<>();
+                                    values.put(General.EMAIL, email);
+                                    values.put(General.PASSWORD, password);
+                                    values.put(General.PERSIST, "TRUE");
+                                    SharedPreferenceManager.saveMultiple(values, mContext);
+                                }
+                                General.makeToast(mContext, "Loged in ");
+                                break;
+                            case General.HTTP_EXCEPTION:
+                                General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
+                                break;
+                            case General.HTTP_FAIL:
+                                General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                    General.makeToast(mContext, mContext.getResources().getText(R.string.unknown_error).toString());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        General.makeToast(mContext, "Loged in ");
     }
 }
