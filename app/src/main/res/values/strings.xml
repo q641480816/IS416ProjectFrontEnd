@@ -1,8 +1,16 @@
 <resources>
     <string name="app_name">SMUJio</string>
 
+    <!-- Common -->
+    <string name="unknown_error">Unknown Error</string>
 
     <!-- landing -->
     <string name="register">Register</string>
     <string name="login">Login</string>
+    <string name="email_title">Email</string>
+    <string name="email_hint">Email address</string>
+    <string name="password_title">Password</string>
+    <string name="password_hint">Password</string>
+    <string name="switch_action_new">Existing User</string>
+    <string name="switch_action_exist">New User</string>
 </resources>
