@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
-import com.is416.smujio.MainActivity;
+import com.is416.smujio.JioActivity;
 import com.is416.smujio.component.fragment.MapFragment;
 import com.is416.smujio.component.fragment.PairFragment;
 
@@ -45,10 +45,10 @@ public class JioFragmentPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         Fragment fragment = null;
         switch (position) {
-            case MainActivity.PAGE_ONE:
+            case JioActivity.PAGE_ONE:
                 fragment = mapFragment;
                 break;
-            case MainActivity.PAGE_TWO:
+            case JioActivity.PAGE_TWO:
                 fragment = pairFragment;
                 break;
         }

@@ -10,7 +10,7 @@ import android.widget.RadioGroup;
 
 import com.is416.smujio.adapter.JioFragmentPagerAdapter;
 
-public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener, ViewPager.OnPageChangeListener {
+public class JioActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener, ViewPager.OnPageChangeListener {
 
     private Intent pIntent;
     private Context mContext;
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_jio);
 
         this.pIntent = getIntent();
         this.mContext = this;

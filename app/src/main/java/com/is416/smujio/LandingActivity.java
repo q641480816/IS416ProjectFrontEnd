@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -231,7 +230,7 @@ public class LandingActivity extends AppCompatActivity {
                                     values.put(General.PERSIST, "TRUE");
                                     SharedPreferenceManager.saveMultiple(values, mContext);
                                 }
-                                Intent it = new Intent(mContext, MainActivity.class);
+                                Intent it = new Intent(mContext, JioActivity.class);
                                 it.putExtra("isNew", action.getText().equals(getResources().getString(R.string.register)));
 
                                 if (isTimer){
