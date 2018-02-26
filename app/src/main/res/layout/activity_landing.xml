@@ -41,30 +41,22 @@
             android:alpha="1"
             android:visibility="visible">
 
-            <Button
+            <com.is416.smujio.component.LoadingButton
                 android:id="@+id/register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/landing_margin"
                 android:layout_marginRight="@dimen/landing_margin"
                 android:layout_marginTop="20dp"
-                android:background="@color/dark_grey"
-                android:text="@string/register"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:elevation="6dp"/>
+                android:text="@string/register"/>
 
-            <Button
+            <com.is416.smujio.component.LoadingButton
                 android:id="@+id/login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/landing_margin"
                 android:layout_marginBottom="0dp"
-                android:text="@string/login"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:background="@color/dark_grey"
-                android:elevation="6dp"/>
+                android:text="@string/login"/>
 
         </LinearLayout>
 
@@ -184,17 +176,13 @@
 
             </LinearLayout>
 
-            <Button
+            <com.is416.smujio.component.LoadingButton
                 android:id="@+id/action"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/landing_margin"
                 android:layout_marginBottom="0dp"
                 android:text="@string/login"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:background="@color/dark_grey"
-                android:elevation="6dp"
                 android:onClick="performAction"/>
 
         </LinearLayout>

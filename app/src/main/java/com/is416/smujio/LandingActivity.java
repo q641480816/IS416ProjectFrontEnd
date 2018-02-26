@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.is416.smujio.component.LoadingButton;
 import com.is416.smujio.util.General;
 import com.is416.smujio.util.SharedPreferenceManager;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -23,6 +25,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -33,13 +37,13 @@ public class LandingActivity extends AppCompatActivity {
     private LinearLayout main_frame;
     private LinearLayout logo_frame;
     private RelativeLayout action_frame;
-    private Button register;
-    private Button login;
+    private LoadingButton register;
+    private LoadingButton login;
     private LinearLayout buttons;
     private LinearLayout actions;
     private EditText email;
     private EditText password;
-    private Button action;
+    private LoadingButton action;
     private TextView switchAction;
 
     private InputMethodManager imm;
@@ -71,6 +75,8 @@ public class LandingActivity extends AppCompatActivity {
 
     private void init(){
         imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        this.login.setText(getResources().getString(R.string.login));
+        this.register.setText(getResources().getString(R.string.register));
         loginCheck();
     }
 
@@ -95,11 +101,11 @@ public class LandingActivity extends AppCompatActivity {
         if (!SharedPreferenceManager.get(General.EMAIL, mContext).equals(SharedPreferenceManager.nullable) &&  !SharedPreferenceManager.get(General.PERSIST, mContext).equals(SharedPreferenceManager.nullable)){
             String email = SharedPreferenceManager.get(General.EMAIL, mContext);
             String password = SharedPreferenceManager.get(General.PASSWORD, mContext);
-            login(email, password, false);
+            login(email, password, false, true);
         }else{
             ValueAnimator anim = ValueAnimator.ofFloat(0f,1.25f);
             anim.setDuration(1000);
-            anim.setStartDelay(2500);
+            anim.setStartDelay(2000);
             //anim.setRepeatCount(0);
             anim.addUpdateListener(animation -> {
                 float currentValue = (float) animation.getAnimatedValue();
@@ -151,13 +157,13 @@ public class LandingActivity extends AppCompatActivity {
 
 
     public void performAction(View view) {
-        String action = ((Button)view).getText().toString();
+        String action = ((LoadingButton)view).getText();
         String email = this.email.getText().toString();
         String password = this.password.getText().toString();
         boolean isLogin = action.equals(getResources().getText(R.string.login));
-
+        this.action.setLoading(true);
         if (isLogin){
-            login(email, password, true);
+            login(email, password, true, false);
         }else {
             register(email, password);
         }
@@ -172,10 +178,11 @@ public class LandingActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
+                    action.setLoading(false);
                     try {
                         switch (response.getInt(General.HTTP_STATUS_KEY)){
                             case General.HTTP_SUCCESS:
-                                login(email, password, true);
+                                login(email, password, true, false);
                                 break;
                             case General.HTTP_EXCEPTION:
                                 General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
@@ -191,6 +198,7 @@ public class LandingActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     super.onFailure(statusCode, headers, throwable, errorResponse);
+                    action.setLoading(false);
                     General.makeToast(mContext, mContext.getResources().getText(R.string.unknown_error).toString());
                 }
             });
@@ -199,7 +207,7 @@ public class LandingActivity extends AppCompatActivity {
         }
     }
 
-    private void login(String email, String password, boolean isToLocal){
+    private void login(String email, String password, boolean isToLocal, boolean isTimer){
         try {
             JSONObject body = new JSONObject();
             body.put("email", email);
@@ -208,6 +216,7 @@ public class LandingActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
+                    action.setLoading(false);
                     try {
                         switch (response.getInt(General.HTTP_STATUS_KEY)){
                             case General.HTTP_SUCCESS:
@@ -222,7 +231,21 @@ public class LandingActivity extends AppCompatActivity {
                                     values.put(General.PERSIST, "TRUE");
                                     SharedPreferenceManager.saveMultiple(values, mContext);
                                 }
-                                General.makeToast(mContext, "Loged in ");
+                                Intent it = new Intent(mContext, MainActivity.class);
+                                it.putExtra("isNew", action.getText().equals(getResources().getString(R.string.register)));
+
+                                if (isTimer){
+                                    new Timer().schedule(new TimerTask() {
+                                        @Override
+                                        public void run() {
+                                            startActivity(it);
+                                            finish();
+                                        }
+                                    }, 2000);
+                                }else{
+                                    startActivity(it);
+                                    finish();
+                                }
                                 break;
                             case General.HTTP_EXCEPTION:
                                 General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
@@ -238,6 +261,7 @@ public class LandingActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     super.onFailure(statusCode, headers, throwable, errorResponse);
+                    action.setLoading(false);
                     General.makeToast(mContext, mContext.getResources().getText(R.string.unknown_error).toString());
                 }
             });
