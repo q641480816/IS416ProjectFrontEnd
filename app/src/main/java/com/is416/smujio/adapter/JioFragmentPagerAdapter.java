@@ -20,7 +20,6 @@ public class JioFragmentPagerAdapter extends FragmentPagerAdapter {
 
     public JioFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
-
         mapFragment = new MapFragment();
         pairFragment = new PairFragment();
     }
