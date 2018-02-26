@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.is416.smujio.JioActivity;
 import com.is416.smujio.R;
+import com.is416.smujio.util.ActivityManager;
 
 /**
  * Created by Gods on 2/26/2018.
@@ -34,11 +36,11 @@ public class MapFragment extends Fragment{
 
     }
 
-    private void addListener() {
-
+    private void init() {
+        this.mContext = ((JioActivity) ActivityManager.getAc("MAIN")).getContext();
     }
 
-    private void init() {
+    private void addListener() {
 
     }
 }

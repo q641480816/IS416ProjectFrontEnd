@@ -9,6 +9,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.is416.smujio.adapter.JioFragmentPagerAdapter;
+import com.is416.smujio.util.ActivityManager;
 import com.is416.smujio.util.General;
 
 public class JioActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener, ViewPager.OnPageChangeListener {
@@ -40,6 +41,7 @@ public class JioActivity extends AppCompatActivity implements RadioGroup.OnCheck
     }
 
     private void init(){
+        ActivityManager.add(name, this);
         this.jioFragmentPagerAdapter = new JioFragmentPagerAdapter(getSupportFragmentManager());
 
         //TODO: Welcome new user
@@ -104,4 +106,15 @@ public class JioActivity extends AppCompatActivity implements RadioGroup.OnCheck
                 break;
         }
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+        ActivityManager.remove(name);
+    }
+
+    public Context getContext(){
+        return mContext;
+    }
 }
+
