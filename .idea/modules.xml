@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/IS416ProjectFrontEnd.iml" filepath="$PROJECT_DIR$/IS416ProjectFrontEnd.iml" />
+      <module fileurl="file://D:\MobileApplications\IS416ProjectFrontEnd\IS416ProjectFrontEnd.iml" filepath="D:\MobileApplications\IS416ProjectFrontEnd\IS416ProjectFrontEnd.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://D:\MobileApplications\IS416ProjectFrontEnd\app\app.iml" filepath="D:\MobileApplications\IS416ProjectFrontEnd\app\app.iml" />
     </modules>
   </component>
 </project>
