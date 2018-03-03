@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="9.75">
+        android:layout_weight="10">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPager"
@@ -19,42 +19,19 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/bt_nav"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <RadioGroup
-            android:id="@+id/bt_tab_bar"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="@color/white"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/tb_map"
-                style="@style/tab_menu_item"
-                android:drawableTop="@drawable/tab_menu_map"
-                android:textSize="16sp"
-                android:text="@string/tab_menu_map"
-                android:layout_weight="2"/>
-
-            <RadioButton
-                android:id="@+id/tb_init"
-                android:drawableTop="@drawable/tab_init"
-                style="@style/tab_menu_item"
-                android:layout_weight="0.8"/>
-
-            <RadioButton
-                android:id="@+id/tb_pair"
-                style="@style/tab_menu_item"
-                android:drawableTop="@drawable/tab_menu_pair"
-                android:textSize="16sp"
-                android:text="@string/tab_menu_pair"
-                android:layout_weight="2"/>
-
-        </RadioGroup>
-
-    </LinearLayout>
+        android:layout_weight="1"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        app:itemIconTint="@color/bottom_nav_color"
+        app:itemTextColor="@color/bottom_nav_color"
+        app:paddingStart="10dp"
+        app:paddingEnd="10dp"
+        app:itemBackground="@color/white"
+        app:menu="@menu/bottom_nav_menu"/>
 
 </LinearLayout>
