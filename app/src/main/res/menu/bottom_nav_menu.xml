@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_nav_map"
+        android:icon="@drawable/bt_tab_map"
+        app:showAsAction="ifRoom"
+        android:title="@string/tab_menu_map"/>
+    <item
+        android:id="@+id/menu_nav_pair"
+        android:icon="@drawable/bt_tab_pair"
+        app:showAsAction="ifRoom"
+        android:title="@string/tab_menu_pair"/>
+
+</menu>
