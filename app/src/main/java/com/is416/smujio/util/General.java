@@ -1,8 +1,12 @@
 package com.is416.smujio.util;
 
 import android.content.Context;
+import android.location.Location;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.is416.smujio.R;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -20,6 +24,7 @@ public class General {
 
     private static final String baseUrl = "http://www.card-digi.com:8080/Jio/service";
 
+    public static Location myLastLocation;
     public static String token;
     public static String email;
     public static JSONObject user;
@@ -37,6 +42,10 @@ public class General {
     public static final String HTTP_DATA_KEY = "data";
     public static final int HTTP_GET = 0;
     public static final int HTTP_POST = 1;
+
+    public static final String EVENT_TYPE_MOVIE = "MOVIE";
+    public static final String EVENT_TYPE_BAR = "BAR";
+    public static final String EVENT_TYPE_DINE = "DINE";
 
     public static void makeToast(Context c, String message){
         Toast.makeText(c, message, Toast.LENGTH_LONG).show();
@@ -63,6 +72,23 @@ public class General {
                 break;
         }
 
+    }
+
+    public static int getMarker(String type){
+        int id = 0;
+        switch (type){
+            case EVENT_TYPE_MOVIE:
+                id = R.mipmap.movie;
+                break;
+            case EVENT_TYPE_BAR:
+                id = R.mipmap.bar;
+                break;
+            case EVENT_TYPE_DINE:
+                id = R.mipmap.dine;
+                break;
+        }
+
+        return id;
     }
 
 }
