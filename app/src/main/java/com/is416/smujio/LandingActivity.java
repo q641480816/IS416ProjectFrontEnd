@@ -5,8 +5,10 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -54,8 +56,8 @@ public class LandingActivity extends AppCompatActivity {
 
         this.mContext = this;
         bindView();
-        addListeners();
         init();
+        addListeners();
     }
 
     private void bindView(){
@@ -76,6 +78,7 @@ public class LandingActivity extends AppCompatActivity {
         imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         this.login.setText(getResources().getString(R.string.login));
         this.register.setText(getResources().getString(R.string.register));
+        getMetrics();
         loginCheck();
     }
 
@@ -267,5 +270,11 @@ public class LandingActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void getMetrics(){
+        Rect r = new Rect();
+        this.main_frame.getWindowVisibleDisplayFrame(r);
+        General.METRIC_HEIGHT = r.bottom - r.top;
     }
 }

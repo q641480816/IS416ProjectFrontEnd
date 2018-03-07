@@ -15,11 +15,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
 import com.is416.smujio.adapter.JioFragmentPagerAdapter;
 import com.is416.smujio.util.ActivityManager;
 import com.is416.smujio.util.General;

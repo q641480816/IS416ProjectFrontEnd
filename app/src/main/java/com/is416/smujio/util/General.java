@@ -1,7 +1,10 @@
 package com.is416.smujio.util;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.location.Location;
+import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -21,6 +24,9 @@ import cz.msebera.android.httpclient.protocol.HTTP;
  */
 
 public class General {
+
+    public static int METRIC_HEIGHT;
+    public static int METRIC_WIDTH;
 
     private static final String baseUrl = "http://www.card-digi.com:8080/Jio/service";
 
@@ -91,4 +97,15 @@ public class General {
         return id;
     }
 
+    public static int convertDpToPixel(int dp, Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = (float) dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return (int)px;
+    }
+
+    public static float getMovingDistance(float startY, MotionEvent ev) {
+        float dy = (ev.getY(0) - startY);
+        return dy;
+    }
 }
