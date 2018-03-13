@@ -53,4 +53,12 @@ public class JioFragmentPagerAdapter extends FragmentPagerAdapter {
         }
         return fragment;
     }
+
+    public boolean isListOpen(){
+        return mapFragment.isListOpen();
+    }
+
+    public void closeList(){
+        mapFragment.closeList();
+    }
 }

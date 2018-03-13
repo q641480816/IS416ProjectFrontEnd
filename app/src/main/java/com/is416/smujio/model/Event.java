@@ -9,25 +9,29 @@ import java.util.Date;
 
 public class Event {
 
-    private int id;
+    private long id;
+    private User owner;
     private double latitude;
     private double longitude;
+    private String location;
     private Date initTime;
     private int status;
     private String type;
-    private ArrayList<Integer> participants;
+    private ArrayList<User> participants;
 
-    public Event(int id, double latitude, double longitude, Date initTime, int status, String type, ArrayList<Integer> participants) {
+    public Event(long id, User owner, double latitude, double longitude, String location, Date initTime, int status, String type, ArrayList<User> participants) {
         this.id = id;
+        this.owner = owner;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.location = location;
         this.initTime = initTime;
         this.status = status;
         this.type = type;
         this.participants = participants;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -75,11 +79,27 @@ public class Event {
         this.type = type;
     }
 
-    public ArrayList<Integer> getParticipants() {
+    public ArrayList<User> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(ArrayList<Integer> participants) {
+    public void setParticipants(ArrayList<User> participants) {
         this.participants = participants;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

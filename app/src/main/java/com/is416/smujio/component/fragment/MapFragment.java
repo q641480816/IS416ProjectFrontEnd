@@ -5,6 +5,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,12 +30,16 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.is416.smujio.JioActivity;
 import com.is416.smujio.R;
+import com.is416.smujio.adapter.EventListAdapter;
 import com.is416.smujio.model.Event;
+import com.is416.smujio.model.User;
 import com.is416.smujio.util.ActivityManager;
 import com.is416.smujio.util.General;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -56,6 +63,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private LinearLayout list_top_back;
     private LinearLayout list_top_front;
     private ImageView list_top_back_back;
+    private ListView event_list;
+    private EventListAdapter eventListAdapter;
 
     private boolean isListHeadPressed = false;
     private boolean isListOpen = false;
@@ -78,18 +87,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         this.list_top_front = mainView.findViewById(R.id.list_title_front);
         this.list_top_back = mainView.findViewById(R.id.list_title_back);
         this.list_top_back_back = mainView.findViewById(R.id.list_title_back_back);
+        this.event_list = mainView.findViewById(R.id.event_list);
 
         mapFrag.getMapAsync(this);
     }
 
     private void init() {
         this.mContext = ((JioActivity) ActivityManager.getAc("MAIN")).getContext();
+        this.eventListAdapter = new EventListAdapter(mContext,"",new ArrayList<>());
         this.MOCK_TOP_HEIGHT = General.METRIC_HEIGHT/11*10 - General.convertDpToPixel(65,mContext);
         this.MOCK_SIDE_WIDTH = General.convertDpToPixel(30, mContext);
         //init list
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         params.setMargins(MOCK_SIDE_WIDTH, MOCK_TOP_HEIGHT, MOCK_SIDE_WIDTH, 0);
         this.list_container.setLayoutParams(params);
+        this.event_list.setAdapter(eventListAdapter);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -170,10 +182,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             double la = r.nextInt(2) == 0 ? this.myLastKnownLocation.getLatitude() + lav : this.myLastKnownLocation.getLatitude() - lav;
             double lo = r.nextInt(2) == 0 ? this.myLastKnownLocation.getLongitude() + lov : this.myLastKnownLocation.getLongitude() - lov;
 
-            if (!type_name.equals("")){
-                events.add(new Event(i,la,lo,new Date(),0,type_name,new ArrayList<>()));
+            Geocoder geocoder = new Geocoder(mContext.getApplicationContext());
+            try {
+                List<Address> addressList = geocoder.getFromLocation(la,lo,1);
+                String str = addressList.get(0).getLocality()+",";
+                str += addressList.get(0).getCountryName();
+                if (!type_name.equals("")){
+                    events.add(new Event(i,new User(),la,lo, str,new Date(),0,type_name,new ArrayList<>()));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
+
+        this.eventListAdapter.update(events);
 
         for (Event e: events){
             MarkerOptions markerOption = new MarkerOptions().position(new LatLng(e.getLatitude(), e.getLongitude()));
@@ -203,6 +225,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             this.list_container.setLayoutParams(params);
             this.list_top_front.setAlpha(currentValue);
             this.list_top_back.setAlpha(1 - currentValue);
+            this.event_list.setAlpha(1 - currentValue);
             this.list_top_back.requestLayout();
             this.list_top_front.requestLayout();
             this.list_container.requestLayout();
@@ -216,5 +239,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
         anim.start();
+    }
+
+    public boolean isListOpen(){
+        return isListOpen;
+    }
+
+    public void closeList(){
+        reDrawList(false);
     }
 }
