@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.is416.smujio.JioActivity;
 import com.is416.smujio.R;
 import com.is416.smujio.adapter.EventListAdapter;
+import com.is416.smujio.component.dialog.JoinEventDialog;
 import com.is416.smujio.model.Event;
 import com.is416.smujio.model.User;
 import com.is416.smujio.util.ActivityManager;
@@ -39,6 +40,7 @@ import com.is416.smujio.util.General;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -46,7 +48,7 @@ import java.util.Random;
  * Created by Gods on 2/26/2018.
  */
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private Context mContext;
     private LayoutInflater inflater;
@@ -54,6 +56,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private int MOCK_TOP_HEIGHT;
     private int MOCK_SIDE_WIDTH;
 
+    private HashMap<Marker, Event> marker_info;
     private Location myLastKnownLocation;
     private View mainView;
     private GoogleMap mGoogleMap;
@@ -142,9 +145,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        if (marker_info == null) {marker_info = new HashMap<>();}
         mGoogleMap = googleMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        //googleMap.getUiSettings().setZoomControlsEnabled(true);
         //If save power, turn off
         googleMap.getUiSettings().setMyLocationButtonEnabled(true);
         googleMap.setMyLocationEnabled(true);
@@ -155,11 +159,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         double longitude = this.myLastKnownLocation.getLongitude();
         LatLng latLng = new LatLng(latitude, longitude);
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
+        mGoogleMap.setOnMarkerClickListener(this);
         init_event_list();
     }
 
     private void init_event_list(){
         mGoogleMap.clear();
+        marker_info.clear();
         ArrayList<Event> events = new ArrayList<>();
         Random r = new Random();
         for(int i = 0; i < 20; i++){
@@ -199,15 +205,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         for (Event e: events){
             MarkerOptions markerOption = new MarkerOptions().position(new LatLng(e.getLatitude(), e.getLongitude()));
-            System.out.println(General.getMarker(e.getType()));
             //Custom icon
             markerOption.icon(BitmapDescriptorFactory.fromResource(General.getMarker(e.getType())));
             Marker currentMarker = mGoogleMap.addMarker(markerOption);
+            marker_info.put(currentMarker, e);
         }
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        JoinEventDialog joinEventDialog = new JoinEventDialog(mContext, "",marker_info.get(marker));
+        joinEventDialog.show();
+        return false;
     }
 
     private void reDrawList(boolean isOpen){
         this.isListOpen = isOpen;
+        toggleGPSTrack(!isOpen);
         this.mGoogleMap.getUiSettings().setScrollGesturesEnabled(!isOpen);
         ValueAnimator anim = isOpen ? ValueAnimator.ofFloat(1f, 0f) : ValueAnimator.ofFloat(0f, 1f);
         if (isOpen){
@@ -247,5 +261,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     public void closeList(){
         reDrawList(false);
+    }
+
+    @SuppressLint("MissingPermission")
+    public void toggleGPSTrack(boolean isOpen){
+        this.mGoogleMap.getUiSettings().setMyLocationButtonEnabled(isOpen);
+        this.mGoogleMap.setMyLocationEnabled(isOpen);
     }
 }

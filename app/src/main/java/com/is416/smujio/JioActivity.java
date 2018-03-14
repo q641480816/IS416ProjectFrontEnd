@@ -85,9 +85,13 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
         if (state == 2) {
             switch (main_content.getCurrentItem()) {
                 case PAGE_ONE:
+                    if (!jioFragmentPagerAdapter.isListOpen()){
+                        jioFragmentPagerAdapter.toggleGPSTrack(true);
+                    }
                     this.bottomNavigationView.setSelectedItemId(R.id.menu_nav_map);
                     break;
                 case PAGE_TWO:
+                    jioFragmentPagerAdapter.toggleGPSTrack(false);
                     this.bottomNavigationView.setSelectedItemId(R.id.menu_nav_pair);
                     break;
             }
@@ -182,6 +186,15 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
             }
         }
         return l;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (jioFragmentPagerAdapter.isListOpen()){
+            jioFragmentPagerAdapter.closeList();
+        }else {
+            moveTaskToBack(true);
+        }
     }
 }
 

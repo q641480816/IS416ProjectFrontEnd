@@ -61,4 +61,8 @@ public class JioFragmentPagerAdapter extends FragmentPagerAdapter {
     public void closeList(){
         mapFragment.closeList();
     }
+
+    public void toggleGPSTrack(boolean isOpen){
+        mapFragment.toggleGPSTrack(isOpen);
+    }
 }
