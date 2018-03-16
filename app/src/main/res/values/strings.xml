@@ -19,4 +19,7 @@
 
     <!--join event dialog-->
     <string name="join_event_title">Join Event</string>
+    <!--init event dialog-->
+    <string name="init_event_title">Start an Event</string>
+    <string name="init_event_start">Start!</string>
 </resources>

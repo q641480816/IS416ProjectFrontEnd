@@ -1,5 +1,11 @@
 package com.is416.smujio.model;
 
+import com.is416.smujio.util.General;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
 import java.util.Date;
 
 public class User {
@@ -21,6 +27,16 @@ public class User {
         this.email = email;
         this.passwordHash = passwordHash;
         this.passwordSalt = passwordSalt;
+        this.nickName = nickName == null ? "Edit Nick Name" : nickName;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+        this.date = date;
+        this.avatar = avatar;
+    }
+
+    public User(long accountId, String email, String nickName, Date dateOfBirth, int gender, Date date, String avatar){
+        this.accountId = accountId;
+        this.email = email;
         this.nickName = nickName == null ? "Edit Nick Name" : nickName;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
@@ -98,5 +114,17 @@ public class User {
 
     public void setAccountId(long accountId) {
         this.accountId = accountId;
+    }
+
+    public static User JsonToObject(JSONObject jsonObject) throws JSONException, ParseException {
+        long id = jsonObject.getLong(General.ACCOUNTID);
+        String email = (String) jsonObject.get(General.EMAIL);
+        String nickName = (String) jsonObject.get(General.NICKNAME);
+        Date birthday  = General.SDF.parse((String) jsonObject.get(General.DATEOFBIRTH));
+        int gender = (Integer) jsonObject.get(General.GENDER);
+        Date date = General.SDF.parse((String) jsonObject.get(General.DATE));
+        String avatar = jsonObject.getString(General.AVATAR) == null ? "null" : jsonObject.getString(General.AVATAR);
+
+        return (new User(id,email,nickName,birthday,gender,date,avatar));
     }
 }

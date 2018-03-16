@@ -24,7 +24,7 @@
                 android:layout_marginBottom="5dp"
                 android:textSize="25sp"
                 android:textAlignment="center"
-                android:text="@string/join_event_title"
+                android:text="@string/init_event_title"
                 android:textStyle="bold"/>
 
             <ImageView
@@ -57,14 +57,13 @@
                 android:paddingLeft="10dp"
                 android:layout_marginBottom="15dp">
 
-                <TextView
+                <Spinner
                     android:id="@+id/type"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:text="dadadsadsadad"/>
+                    android:layout_marginTop="5dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -91,18 +90,6 @@
                     android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_group_24dp"/>
-
-                    <TextView
-                        android:id="@+id/group_size"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="15sp"
-                        android:text="daadsadadad"/>
-
                 </LinearLayout>
 
             </LinearLayout>
@@ -110,13 +97,13 @@
         </LinearLayout>
 
         <com.is416.smujio.component.LoadingButton
-            android:id="@+id/join"
+            android:id="@+id/init"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/landing_margin"
             android:layout_marginBottom="0dp"
             android:text="@string/login"
-            android:onClick="performAction"/>
+            android:onClick="init_activity"/>
 
     </LinearLayout>
 </LinearLayout>

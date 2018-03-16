@@ -9,6 +9,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -31,11 +32,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.is416.smujio.JioActivity;
 import com.is416.smujio.R;
 import com.is416.smujio.adapter.EventListAdapter;
+import com.is416.smujio.component.dialog.InitEventDialog;
 import com.is416.smujio.component.dialog.JoinEventDialog;
 import com.is416.smujio.model.Event;
 import com.is416.smujio.model.User;
 import com.is416.smujio.util.ActivityManager;
 import com.is416.smujio.util.General;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,6 +50,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by Gods on 2/26/2018.
@@ -67,6 +76,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private LinearLayout list_top_front;
     private ImageView list_top_back_back;
     private ListView event_list;
+    private FloatingActionButton init_event;
     private EventListAdapter eventListAdapter;
 
     private boolean isListHeadPressed = false;
@@ -87,6 +97,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         this.mapFrag = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         this.list_container = mainView.findViewById(R.id.list_content);
         this.list_top = mainView.findViewById(R.id.list_top);
+        this.init_event = mainView.findViewById(R.id.fab_add);
         this.list_top_front = mainView.findViewById(R.id.list_title_front);
         this.list_top_back = mainView.findViewById(R.id.list_title_back);
         this.list_top_back_back = mainView.findViewById(R.id.list_title_back_back);
@@ -116,6 +127,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             if (isListOpen){
                 reDrawList(false);
             }
+        });
+        this.init_event.setOnClickListener((v) -> {
+            InitEventDialog initEventDialog = new InitEventDialog(mContext, "");
+            initEventDialog.show();
         });
         this.list_top.setOnTouchListener((view, motionEvent) -> {
             switch (motionEvent.getAction()){
@@ -160,13 +175,60 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         LatLng latLng = new LatLng(latitude, longitude);
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
         mGoogleMap.setOnMarkerClickListener(this);
-        init_event_list();
+        init_event_list(latitude, longitude);
+        System.out.println(latitude + " " + longitude);
     }
 
-    private void init_event_list(){
+    private void init_event_list(double la, double lo){
         mGoogleMap.clear();
         marker_info.clear();
         ArrayList<Event> events = new ArrayList<>();
+        StringBuffer url = new StringBuffer();
+        url.append("/event/all/");
+        url.append(la);
+        url.append(",");
+        url.append(lo);
+
+        try {
+            General.httpRequest(mContext,General.HTTP_GET,url.toString(), null, false, new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        switch (response.getInt(General.HTTP_STATUS_KEY)){
+                            case General.HTTP_SUCCESS:
+                                JSONArray data = response.getJSONArray(General.HTTP_DATA_KEY);
+                                for (int i = 0; i < data.length(); i ++){
+                                    Event e = Event.JsonToObject(data.getJSONObject(i));
+                                    events.add(e);
+                                    MarkerOptions markerOption = new MarkerOptions().position(new LatLng(e.getLatitude(), e.getLongitude()));
+                                    //Custom icon
+                                    markerOption.icon(BitmapDescriptorFactory.fromResource(General.getMarker(e.getType())));
+                                    Marker currentMarker = mGoogleMap.addMarker(markerOption);
+                                    marker_info.put(currentMarker, e);
+                                }
+                                eventListAdapter.update(events);
+                                break;
+                            case General.HTTP_EXCEPTION:
+                                General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
+                                break;
+                            case General.HTTP_FAIL:
+                                General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                    General.makeToast(mContext, mContext.getResources().getText(R.string.unknown_error).toString());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        /*ArrayList<Event> events = new ArrayList<>();
         Random r = new Random();
         for(int i = 0; i < 20; i++){
             int type = (r.nextInt(10)/3);
@@ -199,17 +261,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-
-        this.eventListAdapter.update(events);
-
-        for (Event e: events){
-            MarkerOptions markerOption = new MarkerOptions().position(new LatLng(e.getLatitude(), e.getLongitude()));
-            //Custom icon
-            markerOption.icon(BitmapDescriptorFactory.fromResource(General.getMarker(e.getType())));
-            Marker currentMarker = mGoogleMap.addMarker(markerOption);
-            marker_info.put(currentMarker, e);
-        }
+        }*/
     }
 
     @Override

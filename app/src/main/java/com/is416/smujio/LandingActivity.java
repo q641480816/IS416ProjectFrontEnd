@@ -280,5 +280,6 @@ public class LandingActivity extends AppCompatActivity {
         Rect r = new Rect();
         this.main_frame.getWindowVisibleDisplayFrame(r);
         General.METRIC_HEIGHT = r.bottom - r.top;
+        General.METRIC_WIDTH = r.right - r.left;
     }
 }

@@ -68,7 +68,6 @@ public class EventListAdapter extends BaseAdapter{
     public void update(ArrayList<Event> arrayList){
         this.events = arrayList;
         notifyDataSetChanged();
-        System.out.println("updated");
     }
 
     private static class ViewHolder{
