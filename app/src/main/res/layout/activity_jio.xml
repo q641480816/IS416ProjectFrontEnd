@@ -31,6 +31,7 @@
         app:itemTextColor="@color/bottom_nav_color"
         app:paddingStart="10dp"
         app:paddingEnd="10dp"
+        android:elevation="80dp"
         app:itemBackground="@color/white"
         app:menu="@menu/bottom_nav_menu"/>
 
