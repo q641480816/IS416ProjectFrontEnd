@@ -20,7 +20,6 @@ public class JioFragmentPagerAdapter extends FragmentPagerAdapter {
 
     public JioFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
-
         mapFragment = new MapFragment();
         pairFragment = new PairFragment();
     }
@@ -37,7 +36,6 @@ public class JioFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        System.out.println("position Destory" + position);
         super.destroyItem(container, position, object);
     }
 
@@ -53,5 +51,21 @@ public class JioFragmentPagerAdapter extends FragmentPagerAdapter {
                 break;
         }
         return fragment;
+    }
+
+    public boolean isListOpen(){
+        return mapFragment.isListOpen();
+    }
+
+    public void closeList(){
+        mapFragment.closeList();
+    }
+
+    public void toggleGPSTrack(boolean isOpen){
+        mapFragment.toggleGPSTrack(isOpen);
+    }
+
+    public void toggleShakeListener(boolean isOpen){
+        pairFragment.toggleShakeListener(isOpen);
     }
 }
