@@ -84,7 +84,7 @@ public class PairFragment extends Fragment implements SensorEventListener {
     }
 
     private void addListener() {
-        toggleShakeListener(true);
+        
     }
 
     private void init() {
