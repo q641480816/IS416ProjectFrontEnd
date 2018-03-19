@@ -228,40 +228,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         } catch (Exception e) {
             e.printStackTrace();
         }
-        /*ArrayList<Event> events = new ArrayList<>();
-        Random r = new Random();
-        for(int i = 0; i < 20; i++){
-            int type = (r.nextInt(10)/3);
-            String type_name = "";
-            switch (type){
-                case 0:
-                    type_name = General.EVENT_TYPE_BAR;
-                    break;
-                case 1:
-                    type_name = General.EVENT_TYPE_DINE;
-                    break;
-                case 2:
-                    type_name = General.EVENT_TYPE_MOVIE;
-                    break;
-            }
-            double lav = ((double)r.nextInt(25)/10000.0);
-            double lov = ((double)r.nextInt(30)/10000.0);
-
-            double la = r.nextInt(2) == 0 ? this.myLastKnownLocation.getLatitude() + lav : this.myLastKnownLocation.getLatitude() - lav;
-            double lo = r.nextInt(2) == 0 ? this.myLastKnownLocation.getLongitude() + lov : this.myLastKnownLocation.getLongitude() - lov;
-
-            Geocoder geocoder = new Geocoder(mContext.getApplicationContext());
-            try {
-                List<Address> addressList = geocoder.getFromLocation(la,lo,1);
-                String str = addressList.get(0).getLocality()+",";
-                str += addressList.get(0).getCountryName();
-                if (!type_name.equals("")){
-                    events.add(new Event(i,new User(),la,lo, str,new Date(),0,type_name,new ArrayList<>()));
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }*/
     }
 
     @Override

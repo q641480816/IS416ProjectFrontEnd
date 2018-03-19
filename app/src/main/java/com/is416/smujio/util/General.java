@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.is416.smujio.R;
+import com.is416.smujio.model.Event;
 import com.is416.smujio.model.User;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -38,6 +39,7 @@ public class General {
     public static String token;
     public static String email;
     public static User user;
+    public static Event currentEvent;
 
     //Keys!!!!!!!!!!!!!!!!!!!!!!!
     public static final String PERSIST = "PERSIST";

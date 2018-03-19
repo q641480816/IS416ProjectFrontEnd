@@ -28,6 +28,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".JioActivity" />
+        <activity android:name=".EventActivity"/>
     </application>
 
 </manifest>

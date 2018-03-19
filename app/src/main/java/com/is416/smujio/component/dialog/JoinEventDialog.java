@@ -2,6 +2,7 @@ package com.is416.smujio.component.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.is416.smujio.EventActivity;
 import com.is416.smujio.R;
 import com.is416.smujio.component.LoadingButton;
 import com.is416.smujio.model.Event;
@@ -110,8 +112,10 @@ public class JoinEventDialog extends Dialog {
                         try {
                             switch (response.getInt(General.HTTP_STATUS_KEY)){
                                 case General.HTTP_SUCCESS:
-                                    Event newEvent = Event.JsonToObject((JSONObject)response.get(General.HTTP_DATA_KEY));
-                                    System.out.println("Success");
+                                    Event newEvent = Event.JsonToObject(((JSONObject)response.get(General.HTTP_DATA_KEY)));
+                                    General.currentEvent = newEvent;
+                                    Intent intent = new Intent(mContext, EventActivity.class);
+                                    mContext.startActivity(intent);
                                     break;
                                 case General.HTTP_EXCEPTION:
                                     General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
