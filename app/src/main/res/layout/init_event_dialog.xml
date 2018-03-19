@@ -80,7 +80,7 @@
                         android:id="@+id/location"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="15sp"
+                        android:textSize="12sp"
                         android:text="daadsadadad"/>
 
                 </LinearLayout>
@@ -102,8 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/landing_margin"
             android:layout_marginBottom="0dp"
-            android:text="@string/login"
-            android:onClick="init_activity"/>
+            android:text="@string/login"/>
 
     </LinearLayout>
 </LinearLayout>

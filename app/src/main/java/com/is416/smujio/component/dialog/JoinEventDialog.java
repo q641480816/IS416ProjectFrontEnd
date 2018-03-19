@@ -16,6 +16,11 @@ import com.is416.smujio.R;
 import com.is416.smujio.component.LoadingButton;
 import com.is416.smujio.model.Event;
 import com.is416.smujio.util.General;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by Gods on 3/14/2018.
@@ -89,6 +94,39 @@ public class JoinEventDialog extends Dialog {
     private void addListener(){
         this.close.setOnClickListener((v)->{
             this.dismiss();
+        });
+
+        this.join_bt.setOnClickListener((v)->{
+            this.join_bt.setLoading(true);
+            String url = "/event";
+
+            JSONObject body = new JSONObject();
+            try {
+                body.put(General.ACCOUNTID, General.user.getAccountId());
+                body.put(General.ID, this.event.getId());
+                General.httpRequest(mContext,General.HTTP_PUT,url, body, false, new JsonHttpResponseHandler(){
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            switch (response.getInt(General.HTTP_STATUS_KEY)){
+                                case General.HTTP_SUCCESS:
+                                    Event newEvent = Event.JsonToObject((JSONObject)response.get(General.HTTP_DATA_KEY));
+                                    System.out.println("Success");
+                                    break;
+                                case General.HTTP_EXCEPTION:
+                                    General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
+                                    break;
+                                case General.HTTP_FAIL:
+                                    General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
     }
 }

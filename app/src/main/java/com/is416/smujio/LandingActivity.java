@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.is416.smujio.component.LoadingButton;
+import com.is416.smujio.model.User;
 import com.is416.smujio.util.General;
 import com.is416.smujio.util.SharedPreferenceManager;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -25,6 +26,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -223,9 +225,10 @@ public class LandingActivity extends AppCompatActivity {
                         switch (response.getInt(General.HTTP_STATUS_KEY)){
                             case General.HTTP_SUCCESS:
                                 JSONObject data = response.getJSONObject(General.HTTP_DATA_KEY);
+                                System.out.println(data);
                                 General.token = data.getString("secret");
                                 General.email = email;
-                                General.user = data.getJSONObject("user");
+                                General.user = User.JsonToObject(data.getJSONObject("user"));
                                 if (isToLocal){
                                     HashMap<String, String> values = new HashMap<>();
                                     values.put(General.EMAIL, email);
@@ -260,6 +263,8 @@ public class LandingActivity extends AppCompatActivity {
                                 General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
                         }
                     } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (ParseException e) {
                         e.printStackTrace();
                     }
                 }

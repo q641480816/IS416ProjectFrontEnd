@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.is416.smujio.R;
+import com.is416.smujio.model.User;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -36,7 +37,7 @@ public class General {
     public static Location myLastLocation;
     public static String token;
     public static String email;
-    public static JSONObject user;
+    public static User user;
 
     //Keys!!!!!!!!!!!!!!!!!!!!!!!
     public static final String PERSIST = "PERSIST";

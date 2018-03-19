@@ -156,10 +156,10 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
             if (this.locationManager != null) {
                 if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                     myProvider = LocationManager.NETWORK_PROVIDER;
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 100, this, null);
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 10, this, null);
                 } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     myProvider = LocationManager.GPS_PROVIDER;
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 100, this, null);
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this, null);
                 } else {
                     General.makeToast(mContext, "GG");
                 }
@@ -178,14 +178,27 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
         Location location = null;
         while (l == null){
             location = locationManager.getLastKnownLocation(myProvider);
-            if ((General.myLastLocation == null && location != null) || (General.myLastLocation != null && (General.myLastLocation.getLongitude() != location.getLongitude() || General.myLastLocation.getLatitude() != location.getLatitude()))){
+            if ((General.myLastLocation == null && location != null) || (General.myLastLocation != null)){
                 l = location;
                 General.myLastLocation = location;
                 //System.out.println(location);
-                locationManager.removeUpdates(this);
+                //locationManager.removeUpdates(this);
             }
         }
+        //System.out.println("Found");
         return l;
+    }
+
+    @Override
+    protected void onResume() {
+        this.setLocationService(true);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        this.setLocationService(false);
+        super.onPause();
     }
 
     @Override
