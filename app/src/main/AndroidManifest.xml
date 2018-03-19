@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="com.example.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -27,7 +28,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".JioActivity" />
+<<<<<<< HEAD
         <activity android:name=".EventActivity"></activity>
+=======
+>>>>>>> 3d78d4437379600f319c06fa4c825feb137145bf
     </application>
 
 </manifest>

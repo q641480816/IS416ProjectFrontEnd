@@ -64,4 +64,8 @@ public class JioFragmentPagerAdapter extends FragmentPagerAdapter {
     public void toggleGPSTrack(boolean isOpen){
         mapFragment.toggleGPSTrack(isOpen);
     }
+
+    public void toggleShakeListener(boolean isOpen){
+        pairFragment.toggleShakeListener(isOpen);
+    }
 }
