@@ -28,10 +28,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".JioActivity" />
-<<<<<<< HEAD
-        <activity android:name=".EventActivity"></activity>
-=======
->>>>>>> 3d78d4437379600f319c06fa4c825feb137145bf
     </application>
 
 </manifest>
