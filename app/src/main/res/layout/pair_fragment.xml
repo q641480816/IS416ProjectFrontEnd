@@ -17,6 +17,14 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_centerInParent="true"-->
         <!--android:src="@mipmap/user_icon"/>-->
+        <TextView
+            android:id="@+id/text_view_countdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="09"
+            android:textColor="@android:color/white"
+            android:textSize="30sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -57,13 +65,7 @@
                 android:gravity="center_horizontal|bottom"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/text_view_countdown"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="10"
-                    android:textColor="@android:color/white"
-                    android:textSize="60sp" />
+
 
                 <ImageView
                     android:id="@+id/main_shake_bottom_line"

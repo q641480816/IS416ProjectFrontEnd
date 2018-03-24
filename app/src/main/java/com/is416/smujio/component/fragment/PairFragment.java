@@ -5,7 +5,6 @@ import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.hardware.SensorListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -15,7 +14,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +22,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.is416.smujio.JioActivity;
 import com.is416.smujio.R;
@@ -195,11 +192,12 @@ public class PairFragment extends Fragment implements SensorEventListener {
                         try {
                             //start vibrate, open shake sound track and show animation effect
                             mHandler.obtainMessage(START_SHAKE).sendToTarget();
-                            Thread.sleep(10000);
+                            Thread.sleep(START_TIME_IN_MILLIS);
                             //reminder for vibrate again
-                            mHandler.obtainMessage(AGAIN_SHAKE).sendToTarget();
-                            Thread.sleep(10000);
-                            mHandler.obtainMessage(END_SHAKE).sendToTarget();
+//                            mTimeLeftInMillis = START_TIME_IN_MILLIS;
+//                            mHandler.obtainMessage(AGAIN_SHAKE).sendToTarget();
+//                            Thread.sleep(START_TIME_IN_MILLIS);
+//                            mHandler.obtainMessage(END_SHAKE).sendToTarget();
 
 
                         } catch (InterruptedException e) {
@@ -235,11 +233,13 @@ public class PairFragment extends Fragment implements SensorEventListener {
 
     private void updateCountDownText() {
 //        int minutes = (int) (mTimeLeftInMillis / 1000) / 60;
-        int seconds = (int) (mTimeLeftInMillis / 1000) % 60;
 
-        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d",  seconds);
 
-        mCountdown.setText(timeLeftFormatted);
+        int seconds = (int) (mTimeLeftInMillis / 1000);
+//
+//        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d",  seconds);
+
+        mCountdown.setText(""+seconds);
     }
 
     private class MyHandler extends Handler {
@@ -258,6 +258,9 @@ public class PairFragment extends Fragment implements SensorEventListener {
             super.handleMessage(msg);
             switch (msg.what) {
                 case START_SHAKE:
+
+                    pairFragment.mVibrator.vibrate(300);
+
                     mCountdown.setVisibility(View.VISIBLE);
                     //
                     mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
@@ -270,28 +273,40 @@ public class PairFragment extends Fragment implements SensorEventListener {
                         @Override
                         public void onFinish() {
                             mTimerRunning = false;
+
+
+                            //entire effect end , set vibrate to false
+                            isShake = false;
+                            // two pictures return to original place
+                            startAnimation(true);
+
+                            mTimeLeftInMillis = START_TIME_IN_MILLIS;
                         }
 
 
                     }.start();
                     mTimerRunning = true;
                     //This method requires the caller to hold the permission VIBRATE.
-                    pairFragment.mVibrator.vibrate(300);
                     // open shake sound track
                     pairFragment.mSoundPool.play(mShakeAudio, 1, 1, 0, 0, 1);
                     mTopLine.setVisibility(View.VISIBLE);
                     mBottomLine.setVisibility(View.VISIBLE);
                     startAnimation(false);// animation of split the shakehand picture into 2
                     break;
-                case AGAIN_SHAKE:
-                    pairFragment.mVibrator.vibrate(300);
-                    break;
-                case END_SHAKE:
-                    //entire effect end , set vibrate to false
-                    isShake = false;
-                    // two pictures return to original place
-                    startAnimation(true);
-                    break;
+//                case AGAIN_SHAKE:
+//                    mTimeLeftInMillis = START_TIME_IN_MILLIS;
+//                    mTimerRunning = true;
+//
+//                    pairFragment.mVibrator.vibrate(300);
+//                    break;
+//                case END_SHAKE:
+//                    //Stop timer
+//                    mTimerRunning = false;
+//                    //entire effect end , set vibrate to false
+//                    isShake = false;
+//                    // two pictures return to original place
+//                    startAnimation(true);
+//                    break;
             }
         }
     }
