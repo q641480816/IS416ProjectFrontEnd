@@ -5,14 +5,17 @@ import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+import android.hardware.SensorListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +23,15 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.is416.smujio.JioActivity;
 import com.is416.smujio.R;
 import com.is416.smujio.util.ActivityManager;
 
 import java.lang.ref.WeakReference;
+import java.util.Locale;
 
 
 /**
@@ -50,14 +56,22 @@ public class PairFragment extends Fragment implements SensorEventListener {
     //record shake state
     private boolean isShake = false;
 
+    //count down timer
+    private CountDownTimer mCountDownTimer;
+    private boolean mTimerRunning;
+    private static final long START_TIME_IN_MILLIS = 10000;
+    private long mTimeLeftInMillis = START_TIME_IN_MILLIS;
 
     private LinearLayout mTopLayout;
     private LinearLayout mBottomLayout;
     private ImageView mTopLine;
     private ImageView mBottomLine;
-
+    private TextView mCountdown;
     private MyHandler mHandler;
     private int mShakeAudio;
+
+
+    static long lastUpdate = 0;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mainView = inflater.inflate(R.layout.pair_fragment, container, false);
@@ -77,8 +91,9 @@ public class PairFragment extends Fragment implements SensorEventListener {
         mBottomLayout =  mainView.findViewById(R.id.main_linear_bottom);
         mTopLine = mainView.findViewById(R.id.main_shake_top_line);
         mBottomLine = mainView.findViewById(R.id.main_shake_bottom_line);
-
-        //默认
+        mCountdown = mainView.findViewById(R.id.text_view_countdown);
+        //default
+        mCountdown.setVisibility(View.GONE);
         mTopLine.setVisibility(View.GONE);
         mBottomLine.setVisibility(View.GONE);
     }
@@ -90,6 +105,7 @@ public class PairFragment extends Fragment implements SensorEventListener {
     private void init() {
         this.mContext = ((JioActivity) ActivityManager.getAc("MAIN")).getContext();
         mSensorManager = ((SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE));
+
         mHandler = new MyHandler(this);
         // initiate SoundPool
         mSoundPool = new SoundPool(1, AudioManager.STREAM_SYSTEM, 5);
@@ -143,6 +159,7 @@ public class PairFragment extends Fragment implements SensorEventListener {
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     //after the animation, hind the 2 lines in the center (let them "GONE")
+                    mCountdown.setVisibility(View.GONE);
                     mTopLine.setVisibility(View.GONE);
                     mBottomLine.setVisibility(View.GONE);
                 }
@@ -159,6 +176,7 @@ public class PairFragment extends Fragment implements SensorEventListener {
         int type = event.sensor.getType();
 
         if (type == Sensor.TYPE_ACCELEROMETER) {
+
             //Obtain x,y,z value
             float[] values = event.values;
             float x = values[0];
@@ -177,10 +195,10 @@ public class PairFragment extends Fragment implements SensorEventListener {
                         try {
                             //start vibrate, open shake sound track and show animation effect
                             mHandler.obtainMessage(START_SHAKE).sendToTarget();
-                            Thread.sleep(500);
+                            Thread.sleep(10000);
                             //reminder for vibrate again
                             mHandler.obtainMessage(AGAIN_SHAKE).sendToTarget();
-                            Thread.sleep(500);
+                            Thread.sleep(10000);
                             mHandler.obtainMessage(END_SHAKE).sendToTarget();
 
 
@@ -191,11 +209,14 @@ public class PairFragment extends Fragment implements SensorEventListener {
                 };
                 thread.start();
             }
+
         }
     }
 
+
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 
     public void toggleShakeListener(boolean isOpen){
@@ -212,6 +233,15 @@ public class PairFragment extends Fragment implements SensorEventListener {
         }
     }
 
+    private void updateCountDownText() {
+//        int minutes = (int) (mTimeLeftInMillis / 1000) / 60;
+        int seconds = (int) (mTimeLeftInMillis / 1000) % 60;
+
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d",  seconds);
+
+        mCountdown.setText(timeLeftFormatted);
+    }
+
     private class MyHandler extends Handler {
         private WeakReference<PairFragment> mReference;
         private PairFragment pairFragment;
@@ -221,11 +251,30 @@ public class PairFragment extends Fragment implements SensorEventListener {
                 pairFragment = mReference.get();
             }
         }
+
+
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
                 case START_SHAKE:
+                    mCountdown.setVisibility(View.VISIBLE);
+                    //
+                    mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+                            mTimeLeftInMillis = millisUntilFinished;
+                            updateCountDownText();
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            mTimerRunning = false;
+                        }
+
+
+                    }.start();
+                    mTimerRunning = true;
                     //This method requires the caller to hold the permission VIBRATE.
                     pairFragment.mVibrator.vibrate(300);
                     // open shake sound track
