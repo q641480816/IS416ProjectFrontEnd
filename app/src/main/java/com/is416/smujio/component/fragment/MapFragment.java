@@ -5,13 +5,10 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,21 +32,15 @@ import com.is416.smujio.adapter.EventListAdapter;
 import com.is416.smujio.component.dialog.InitEventDialog;
 import com.is416.smujio.component.dialog.JoinEventDialog;
 import com.is416.smujio.model.Event;
-import com.is416.smujio.model.User;
 import com.is416.smujio.util.ActivityManager;
 import com.is416.smujio.util.General;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -285,5 +276,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public void toggleGPSTrack(boolean isOpen){
         this.mGoogleMap.getUiSettings().setMyLocationButtonEnabled(isOpen);
         this.mGoogleMap.setMyLocationEnabled(isOpen);
+    }
+
+    public void update_event_list(){
+        Location location = ((JioActivity) ActivityManager.getAc(JioActivity.name)).getLastKnownLocation();
+        init_event_list(location.getLatitude(),location.getLongitude());
     }
 }

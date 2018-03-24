@@ -25,6 +25,7 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
     private Intent pIntent;
     private Context mContext;
     public static final String name = "MAIN";
+    public static final int EVENT_DETAIL_REQUEST_CODE = 999;
     public static final int PAGE_ONE = 0;
     public static final int PAGE_TWO = 1;
     public static final String LOCATION_SERVICE = Context.LOCATION_SERVICE;
@@ -211,6 +212,16 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
         this.jioFragmentPagerAdapter.toggleShakeListener(false);
         this.setLocationService(false);
         super.onPause();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == JioActivity.EVENT_DETAIL_REQUEST_CODE) {
+            if (resultCode == EventActivity.RESULT_CODE) {
+                jioFragmentPagerAdapter.update_event_list();
+            }
+        }
     }
 }
 

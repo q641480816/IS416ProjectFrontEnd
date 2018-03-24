@@ -136,20 +136,26 @@ public class InitEventDialog extends Dialog implements AdapterView.OnItemSelecte
                                     Event newEvent = Event.JsonToObject(((JSONObject)response.get(General.HTTP_DATA_KEY)).getJSONObject(General.EVENT));
                                     General.currentEvent = newEvent;
                                     Intent intent = new Intent(mContext, EventActivity.class);
-                                    mContext.startActivity(intent);
+                                    dismiss();
+                                    ((JioActivity) ActivityManager.getAc(JioActivity.name)).startActivityForResult(intent,JioActivity.EVENT_DETAIL_REQUEST_CODE);
                                     break;
                                 case General.HTTP_EXCEPTION:
                                     General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
+                                    init_bt.setLoading(false);
                                     break;
                                 case General.HTTP_FAIL:
                                     General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
+                                    init_bt.setLoading(false);
+                                    break;
                             }
                         } catch (Exception e) {
+                            init_bt.setLoading(false);
                             e.printStackTrace();
                         }
                     }
                 });
             } catch (Exception e) {
+                init_bt.setLoading(false);
                 e.printStackTrace();
             }
         });

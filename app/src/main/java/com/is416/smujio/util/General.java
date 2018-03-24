@@ -51,6 +51,11 @@ public class General {
     public static final String HTTP_MESSAGE_KEY = "message";
     public static final String HTTP_EXCEPTION_KEY = "exception";
     public static final String HTTP_DATA_KEY = "data";
+
+    //action
+    public static final String LEAVE = "leave";
+    public static final String SHAKE = "shake";
+
     //User
     public static final String USER = "user";
     public static final String ACCOUNTID = "accountId";
@@ -62,6 +67,7 @@ public class General {
     public static final String GENDER = "gender";
     public static final String DATE = "date";
     public static final String AVATAR = "avatar";
+    public static final String USERSTATUS = "userStatus";
 
     //Event
     public static final String EVENT = "event";
@@ -75,6 +81,7 @@ public class General {
     public static final String PARTICIPANTS = "participants";
     public static final String SOCKETURL = "socketUrl";
     public static final String LOCATION = "location";
+    public static final String SIZELIMIT = "sizeLimit";
 
     public static final String EVENT_TYPE_MOVIE = "MOVIE";
     public static final String EVENT_TYPE_BAR = "BAR";
