@@ -51,6 +51,7 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
 
     private void init() {
         ActivityManager.add(name, this);
+
         this.locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
         this.jioFragmentPagerAdapter = new JioFragmentPagerAdapter(getSupportFragmentManager());
 
@@ -138,24 +139,13 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
         return mContext;
     }
 
+    @SuppressLint("MissingPermission")
     private void setLocationService(boolean isToOpen) {
         if (this.locationManager == null) {
             //check init
             this.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         }
         if (isToOpen) {
-            //TODO: check permissions
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
-
             if (this.locationManager != null) {
                 if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                     myProvider = LocationManager.NETWORK_PROVIDER;
@@ -194,8 +184,8 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
 
     @Override
     protected void onResume() {
-        this.setLocationService(true);
         super.onResume();
+        this.setLocationService(true);
     }
 
     @Override
@@ -209,19 +199,13 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
 
     @Override
     protected void onPause() {
-        this.jioFragmentPagerAdapter.toggleShakeListener(false);
-        this.setLocationService(false);
-        super.onPause();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
-        if (requestCode == JioActivity.EVENT_DETAIL_REQUEST_CODE) {
-            if (resultCode == EventActivity.RESULT_CODE) {
-                jioFragmentPagerAdapter.update_event_list();
-            }
+        try {
+            this.jioFragmentPagerAdapter.toggleShakeListener(false);
+            this.setLocationService(false);
+        }catch (Exception e){
+            e.printStackTrace();
         }
+        super.onPause();
     }
 }
 
