@@ -1,11 +1,16 @@
 package com.is416.smujio;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -36,6 +41,7 @@ import cz.msebera.android.httpclient.Header;
 public class LandingActivity extends AppCompatActivity {
 
     private Context mContext;
+    private Activity this_ac;
 
     private LinearLayout main_frame;
     private LinearLayout logo_frame;
@@ -57,6 +63,7 @@ public class LandingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_landing);
 
         this.mContext = this;
+        this.this_ac = this;
         bindView();
         init();
         addListeners();
@@ -236,21 +243,13 @@ public class LandingActivity extends AppCompatActivity {
                                     values.put(General.PERSIST, "TRUE");
                                     SharedPreferenceManager.saveMultiple(values, mContext);
                                 }
-                                Intent it = new Intent(mContext, JioActivity.class);
-                                it.putExtra("isNew", action.getText().equals(getResources().getString(R.string.register)));
 
-                                if (isTimer){
-                                    new Timer().schedule(new TimerTask() {
-                                        @Override
-                                        public void run() {
-                                            startActivity(it);
-                                            finish();
-                                        }
-                                    }, 2000);
-                                }else{
-                                    startActivity(it);
-                                    finish();
+                                if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                    ActivityCompat.requestPermissions(this_ac, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, JioActivity.EVENT_DETAIL_REQUEST_CODE);
+                                }else {
+                                    start_main(isTimer);
                                 }
+
                                 break;
                             case General.HTTP_EXCEPTION:
                                 if (count < 3){
@@ -286,5 +285,32 @@ public class LandingActivity extends AppCompatActivity {
         this.main_frame.getWindowVisibleDisplayFrame(r);
         General.METRIC_HEIGHT = r.bottom - r.top;
         General.METRIC_WIDTH = r.right - r.left;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        System.out.println(grantResults.length);
+        if (grantResults.length > 0){
+            start_main(false);
+        }
+    }
+
+    private void start_main(boolean isTimer){
+        Intent it = new Intent(mContext, JioActivity.class);
+        it.putExtra("isNew", action.getText().equals(getResources().getString(R.string.register)));
+
+        if (isTimer){
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    startActivity(it);
+                    finish();
+                }
+            }, 2000);
+        }else{
+            startActivity(it);
+            finish();
+        }
     }
 }

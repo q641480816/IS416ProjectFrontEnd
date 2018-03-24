@@ -68,4 +68,8 @@ public class JioFragmentPagerAdapter extends FragmentPagerAdapter {
     public void toggleShakeListener(boolean isOpen){
         pairFragment.toggleShakeListener(isOpen);
     }
+
+    public void update_event_list(){
+        mapFragment.update_event_list();
+    }
 }
