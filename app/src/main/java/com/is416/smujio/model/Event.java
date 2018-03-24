@@ -26,10 +26,12 @@ public class Event {
     private int status;
     private String type;
     private ArrayList<User> participants;
+    private int sizeLimit;
 
-    public Event(long id, User owner, double latitude, double longitude, String location, Date initTime, int status, String type, ArrayList<User> participants) {
+    public Event(long id, User owner, double latitude, double longitude, String location, Date initTime, int status, String type, ArrayList<User> participants, int sizeLimit) {
         this.id = id;
         this.owner = owner;
+        this.sizeLimit = sizeLimit;
         this.latitude = latitude;
         this.longitude = longitude;
         this.location = location;
@@ -115,6 +117,14 @@ public class Event {
         this.location = location;
     }
 
+    public int getSizeLimit() {
+        return sizeLimit;
+    }
+
+    public void setSizeLimit(int sizeLimit) {
+        this.sizeLimit = sizeLimit;
+    }
+
     public static Event JsonToObject(JSONObject jsonObject) throws JSONException, ParseException {
         long id = jsonObject.getLong(General.ID);
         double latitude = (Double) jsonObject.get(General.LATITUDE);
@@ -125,12 +135,21 @@ public class Event {
         User owner = User.JsonToObject((JSONObject) jsonObject.get(General.OWNER));
         String location = (String) jsonObject.get(General.LOCATION);
         ArrayList<User> participants = new ArrayList<>();
+        int size = jsonObject.getInt(General.SIZELIMIT);
         JSONArray tempUsers = (JSONArray) jsonObject.get(General.PARTICIPANTS);
+        User admin = null;
         for(int i = 0; i < tempUsers.length(); i ++){
             JSONObject jb = tempUsers.getJSONObject(i);
-            participants.add(User.JsonToObject(jb));
+            User u = User.JsonToObject(jb);
+            if (admin == null && u.getAccountId() == id){
+                admin = u;
+            }else {
+                participants.add(User.JsonToObject(jb));
+            }
         }
 
-        return (new Event(id,owner,latitude,longitude,location,initTime,status,type,participants));
+        participants.add(0, admin);
+
+        return (new Event(id,owner,latitude,longitude,location,initTime,status,type,participants, size));
     }
 }

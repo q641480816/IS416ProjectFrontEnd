@@ -20,6 +20,7 @@ public class User {
     private Date dateOfBirth;
     private int gender;
     private Date date;
+    private boolean inEventStatus;
 
     public User() {super();}
 
@@ -34,7 +35,7 @@ public class User {
         this.avatar = avatar;
     }
 
-    public User(long accountId, String email, String nickName, Date dateOfBirth, int gender, Date date, String avatar){
+    public User(long accountId, String email, String nickName, Date dateOfBirth, int gender, Date date, String avatar, boolean inEventStatus){
         this.accountId = accountId;
         this.email = email;
         this.nickName = nickName == null ? "Edit Nick Name" : nickName;
@@ -42,6 +43,7 @@ public class User {
         this.gender = gender;
         this.date = date;
         this.avatar = avatar;
+        this.inEventStatus = inEventStatus;
     }
 
     public String getEmail() {
@@ -116,6 +118,14 @@ public class User {
         this.accountId = accountId;
     }
 
+    public boolean isInEventStatus() {
+        return inEventStatus;
+    }
+
+    public void setInEventStatus(boolean inEventStatus) {
+        this.inEventStatus = inEventStatus;
+    }
+
     public static User JsonToObject(JSONObject jsonObject) throws JSONException, ParseException {
         long id = jsonObject.getLong(General.ACCOUNTID);
         String email = (String) jsonObject.get(General.EMAIL);
@@ -124,7 +134,9 @@ public class User {
         int gender = (Integer) jsonObject.get(General.GENDER);
         Date date = General.SDF.parse((String) jsonObject.get(General.DATE));
         String avatar = jsonObject.getString(General.AVATAR) == null ? "null" : jsonObject.getString(General.AVATAR);
+        boolean status = jsonObject.getBoolean(General.USERSTATUS);
 
-        return (new User(id,email,nickName,birthday,gender,date,avatar));
+
+        return (new User(id,email,nickName,birthday,gender,date,avatar,status));
     }
 }

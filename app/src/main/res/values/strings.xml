@@ -1,8 +1,10 @@
 <resources>
-    <string name="app_name">SMUJio</string>
+    <string name="app_name">Jio</string>
 
     <!-- Common -->
     <string name="unknown_error">Unknown Error</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
 
     <!-- landing -->
     <string name="register">Register</string>
@@ -22,4 +24,9 @@
     <!--init event dialog-->
     <string name="init_event_title">Start an Event</string>
     <string name="init_event_start">Start!</string>
+
+    <!-- event -->
+    <string name="event_leave_group_title">Leave Group</string>
+    <string name="event_leave_group_body">Are you sure you want to Leave this Group?</string>
+    <string name="event_leave_group_body_admin">Are you sure you want to Leave and dismiss this Group?</string>
 </resources>
