@@ -15,6 +15,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+
 import com.is416.smujio.adapter.JioFragmentPagerAdapter;
 import com.is416.smujio.util.ActivityManager;
 import com.is416.smujio.util.General;
@@ -30,11 +33,14 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
     public static final int PAGE_TWO = 1;
     public static final String LOCATION_SERVICE = Context.LOCATION_SERVICE;
     public static String myProvider;
+    public boolean isInit = false;
 
     private LocationManager locationManager;
     private JioFragmentPagerAdapter jioFragmentPagerAdapter;
     private ViewPager main_content;
     private BottomNavigationView bottomNavigationView;
+    private LinearLayout main_window;
+    private LinearLayout fallback_window;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,27 +50,35 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
         this.pIntent = getIntent();
         this.mContext = this;
 
-        init();
         bindView();
+        init();
         addListeners();
-    }
-
-    private void init() {
-        ActivityManager.add(name, this);
-
-        this.locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
-        this.jioFragmentPagerAdapter = new JioFragmentPagerAdapter(getSupportFragmentManager());
-
-        //TODO: Welcome new user
-        System.out.println(this.pIntent.getBooleanExtra("isNew", false));
     }
 
     private void bindView() {
         this.main_content = findViewById(R.id.viewPager);
         this.bottomNavigationView = findViewById(R.id.bt_nav);
-        this.main_content.setAdapter(this.jioFragmentPagerAdapter);
+        this.main_window = findViewById(R.id.main_window);
+        this.fallback_window = findViewById(R.id.fallback_window);
+    }
 
-        this.main_content.setCurrentItem(0);
+    private void init() {
+        ActivityManager.add(name, this);
+
+        if (isOPen(mContext)){
+            this.fallback_window.setVisibility(View.GONE);
+            this.main_window.setVisibility(View.VISIBLE);
+            this.locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
+            this.jioFragmentPagerAdapter = new JioFragmentPagerAdapter(getSupportFragmentManager());
+            this.main_content.setAdapter(this.jioFragmentPagerAdapter);
+            this.main_content.setCurrentItem(0);
+            //TODO: Welcome new user
+            System.out.println(this.pIntent.getBooleanExtra("isNew", false));
+            this.isInit = true;
+        }else {
+            this.fallback_window.setVisibility(View.VISIBLE);
+            this.main_window.setVisibility(View.GONE);
+        }
     }
 
     private void addListeners() {
@@ -130,10 +144,23 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
     }
 
     @Override
-    public void onProviderEnabled(String s) {}
+    public void onProviderEnabled(String s) {
+        System.out.println("en");
+        if (isInit){
+            this.fallback_window.setVisibility(View.GONE);
+            this.main_window.setVisibility(View.VISIBLE);
+        }else {
+            init();
+            addListeners();
+        }
+    }
 
     @Override
-    public void onProviderDisabled(String s) {}
+    public void onProviderDisabled(String s) {
+        System.out.println("dis");
+        this.fallback_window.setVisibility(View.VISIBLE);
+        this.main_window.setVisibility(View.GONE);
+    }
 
     public Context getContext() {
         return mContext;
@@ -155,6 +182,8 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this, null);
                 } else {
                     General.makeToast(mContext, "GG");
+                    myProvider = LocationManager.NETWORK_PROVIDER;
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 500000000, 500000000, this, null);
                 }
             } else {
                 General.makeToast(mContext, "Location service is not available!");
@@ -207,5 +236,14 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
         }
         super.onPause();
     }
-}
 
+    public static final boolean isOPen(final Context context) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        if (gps || network) {
+            return true;
+        }
+        return false;
+    }
+}
