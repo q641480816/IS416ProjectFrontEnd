@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -144,6 +145,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     return false;
                 default:
                     return false;
+            }
+        });
+
+        this.event_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                JoinEventDialog joinEventDialog = new JoinEventDialog(mContext, "",((Event) adapterView.getItemAtPosition(i)));
+                joinEventDialog.show();
             }
         });
     }
