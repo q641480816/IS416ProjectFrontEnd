@@ -6,6 +6,10 @@
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
 
+    <!--main menu-->
+    <string name="profile">Profile</string>
+    <string name="setting">Setting</string>
+
     <!-- landing -->
     <string name="register">Register</string>
     <string name="login">Login</string>

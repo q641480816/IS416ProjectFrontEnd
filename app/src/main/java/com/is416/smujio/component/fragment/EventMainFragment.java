@@ -101,7 +101,6 @@ public class EventMainFragment extends Fragment{
                 body.put(General.ID, this.event.getId());
                 body.put(General.ACCOUNTID, General.user.getAccountId());
             }
-            System.out.println(body);
 
             General.httpRequest(mContext,General.HTTP_PUT,url, body, false, new JsonHttpResponseHandler(){
                 @Override

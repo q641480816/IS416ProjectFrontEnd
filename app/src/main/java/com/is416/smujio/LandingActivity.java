@@ -232,7 +232,6 @@ public class LandingActivity extends AppCompatActivity {
                         switch (response.getInt(General.HTTP_STATUS_KEY)){
                             case General.HTTP_SUCCESS:
                                 JSONObject data = response.getJSONObject(General.HTTP_DATA_KEY);
-                                System.out.println(data);
                                 General.token = data.getString("secret");
                                 General.email = email;
                                 General.user = User.JsonToObject(data.getJSONObject("user"));
@@ -290,7 +289,6 @@ public class LandingActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        System.out.println(grantResults.length);
         if (grantResults.length > 0){
             start_main(false);
         }

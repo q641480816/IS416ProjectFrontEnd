@@ -112,9 +112,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
     @SuppressLint("ClickableViewAccessibility")
     private void addListener() {
-        this.list_top.setOnClickListener(view -> {
-            System.out.println("open");
-        });
+        this.list_top.setOnClickListener(view -> {});
         this.list_top_back_back.setOnClickListener((v)->{
             if (isListOpen){
                 reDrawList(false);
@@ -243,9 +241,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         this.mGoogleMap.getUiSettings().setScrollGesturesEnabled(!isOpen);
         ValueAnimator anim = isOpen ? ValueAnimator.ofFloat(1f, 0f) : ValueAnimator.ofFloat(0f, 1f);
         if (isOpen){
-            this.list_top_back.setVisibility(View.VISIBLE);
+            list_top_back.setVisibility(View.VISIBLE);
         }else {
             this.list_top_front.setVisibility(View.VISIBLE);
+            ((JioActivity) ActivityManager.getAc("MAIN")).updateMenuState(true);
         }
         anim.setDuration(400);
         anim.addUpdateListener(animation -> {
@@ -256,6 +255,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             params.setMargins(side, top, side, 0);
             this.list_container.setLayoutParams(params);
             this.list_top_front.setAlpha(currentValue);
+            ((JioActivity) ActivityManager.getAc("MAIN")).updateMenuState(currentValue);
             this.list_top_back.setAlpha(1 - currentValue);
             this.event_list.setAlpha(1 - currentValue);
             this.list_top_back.requestLayout();
@@ -267,6 +267,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             public void onAnimationEnd(Animator animation) {
                 list_top_back.setVisibility(isOpen? View.VISIBLE : View.GONE);
                 list_top_front.setVisibility(isOpen? View.GONE : View.VISIBLE);
+                if (isOpen){
+                    ((JioActivity) ActivityManager.getAc("MAIN")).updateMenuState(false);
+                }
                 super.onAnimationEnd(animation);
             }
         });
