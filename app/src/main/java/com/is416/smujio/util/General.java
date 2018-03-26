@@ -95,6 +95,8 @@ public class General {
     public static final int EVENT_STATUS_JOINING = 0;
     public static final int EVENT_STATUS_STARTED = 1;
     public static final int EVENT_STATUS_STOPPED = -1;
+    public static final int GENDER_MALE = 0;
+    public static final int GENDER_FEMALE = 1;
 
     public static void makeToast(Context c, String message){
         Toast.makeText(c, message, Toast.LENGTH_LONG).show();

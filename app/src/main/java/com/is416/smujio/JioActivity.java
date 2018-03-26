@@ -249,7 +249,8 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             switch (menuItem.getItemId()) {
                 case R.id.menu_profile:
-                    System.out.println("profile");
+                    Intent it = new Intent(this, ProfileActivity.class);
+                    startActivity(it);
                     break;
                 case R.id.menu_setting:
                     System.out.println("setting");
