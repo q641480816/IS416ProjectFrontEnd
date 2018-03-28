@@ -92,6 +92,7 @@ public class General {
     public static final String SOCKETURL = "socketUrl";
     public static final String LOCATION = "location";
     public static final String SIZELIMIT = "sizeLimit";
+    public static final String LASTCALL = "lastCall";
 
     public static final String EVENT_TYPE_MOVIE = "MOVIE";
     public static final String EVENT_TYPE_DRINK = "DRINK";

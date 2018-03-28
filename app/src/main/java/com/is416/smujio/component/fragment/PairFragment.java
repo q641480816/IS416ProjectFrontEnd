@@ -6,6 +6,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -34,6 +36,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
@@ -77,7 +80,13 @@ public class PairFragment extends Fragment implements SensorEventListener {
     private int mShakeAudio;
     private AVLoadingIndicatorView mAVI;
 
-    static long lastUpdate = 0;
+    //
+    private String location = "";
+
+    private Geocoder geocoder;
+    private boolean lastCall = false;
+    private boolean eventStatus = false;
+
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mainView = inflater.inflate(R.layout.pair_fragment, container, false);
@@ -116,7 +125,7 @@ public class PairFragment extends Fragment implements SensorEventListener {
     private void init() {
         this.mContext = ((JioActivity) ActivityManager.getAc("MAIN")).getContext();
         mSensorManager = ((SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE));
-
+        geocoder = new Geocoder(mContext.getApplicationContext());
         mHandler = new MyHandler(this);
         // initiate SoundPool
         mSoundPool = new SoundPool(1, AudioManager.STREAM_SYSTEM, 5);
@@ -261,7 +270,6 @@ public class PairFragment extends Fragment implements SensorEventListener {
             }
         }
 
-
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -277,6 +285,16 @@ public class PairFragment extends Fragment implements SensorEventListener {
                         @Override
                         public void onTick(long millisUntilFinished) {
                             shakeJoin();
+                            if (eventStatus) {
+                                //show pop up
+                                General.makeToast(mContext,"paired");
+                                onFinish();
+                            }
+                            else{
+                                if(millisUntilFinished == 1000){
+                                    lastCall = true;
+                                }
+                            }
                             mTimeLeftInMillis = millisUntilFinished;
                             updateCountDownText();
                         }
@@ -313,21 +331,28 @@ public class PairFragment extends Fragment implements SensorEventListener {
         JSONObject body = new JSONObject();
         try {
             Location location_data = ((JioActivity) ActivityManager.getAc(JioActivity.name)).getLastKnownLocation();
-            body.put(General.ID, -1);
+            List<Address> addressList = geocoder.getFromLocation(location_data.getLatitude(), location_data.getLongitude(), 1);
+            location = addressList.get(0).getAddressLine(0).split(",")[0];
+
             body.put(General.ACCOUNTID, General.user.getAccountId());
             body.put(General.LATITUDE, location_data.getLatitude());
             body.put(General.LONGITUDE, location_data.getLongitude());
+            body.put(General.LOCATION, location);
+            body.put(General.LASTCALL, lastCall);
+            body.put(General.SHAKE, "shake");
 
-            General.httpRequest(mContext,General.HTTP_POST,url, body, false, new JsonHttpResponseHandler(){
+            General.httpRequest(mContext,General.HTTP_PUT, url, body, false, new JsonHttpResponseHandler(){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
                         switch (response.getInt(General.HTTP_STATUS_KEY)){
                             case General.HTTP_SUCCESS:
-                                General.makeToast(mContext, "Api works");
                                 //TODO
-                                    // check return stats (if status is true, onFinish(). popup a dialog box)
-                                    break;
+                                JSONObject data = response.getJSONObject(General.HTTP_DATA_KEY);
+                                System.out.println(data);
+                                eventStatus = data.getBoolean(General.EVENTSTATUS);
+
+                                break;
                             case General.HTTP_EXCEPTION:
                                 General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
                                 break;
