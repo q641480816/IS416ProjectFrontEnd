@@ -6,6 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -26,9 +27,16 @@ import android.widget.TextView;
 import com.is416.smujio.JioActivity;
 import com.is416.smujio.R;
 import com.is416.smujio.util.ActivityManager;
+import com.is416.smujio.util.General;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.wang.avi.AVLoadingIndicatorView;
+
+import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.Locale;
+
+import cz.msebera.android.httpclient.Header;
 
 
 /**
@@ -56,17 +64,18 @@ public class PairFragment extends Fragment implements SensorEventListener {
     //count down timer
     private CountDownTimer mCountDownTimer;
     private boolean mTimerRunning;
-    private static final long START_TIME_IN_MILLIS = 10000;
+    private static final long START_TIME_IN_MILLIS = 11000;
     private long mTimeLeftInMillis = START_TIME_IN_MILLIS;
 
     private LinearLayout mTopLayout;
     private LinearLayout mBottomLayout;
     private ImageView mTopLine;
     private ImageView mBottomLine;
+    private TextView mConnectionMsg;
     private TextView mCountdown;
     private MyHandler mHandler;
     private int mShakeAudio;
-
+    private AVLoadingIndicatorView mAVI;
 
     static long lastUpdate = 0;
 
@@ -88,8 +97,13 @@ public class PairFragment extends Fragment implements SensorEventListener {
         mBottomLayout =  mainView.findViewById(R.id.main_linear_bottom);
         mTopLine = mainView.findViewById(R.id.main_shake_top_line);
         mBottomLine = mainView.findViewById(R.id.main_shake_bottom_line);
+        mAVI = mainView.findViewById(R.id.avi);
         mCountdown = mainView.findViewById(R.id.text_view_countdown);
+        mConnectionMsg = mainView.findViewById(R.id.text_view_shakeinfo);
+
         //default
+        mAVI.setVisibility(View.GONE);
+        mConnectionMsg.setVisibility(View.GONE);
         mCountdown.setVisibility(View.GONE);
         mTopLine.setVisibility(View.GONE);
         mBottomLine.setVisibility(View.GONE);
@@ -120,15 +134,15 @@ public class PairFragment extends Fragment implements SensorEventListener {
         float bottomFromY;
         float bottomToY;
         if (isBack) {
-            topFromY = -0.5f;
+            topFromY = -1f;
             topToY = 0;
-            bottomFromY = 0.5f;
+            bottomFromY = 1f;
             bottomToY = 0;
         } else {
             topFromY = 0;
-            topToY = -0.5f;
+            topToY = -1f;
             bottomFromY = 0;
-            bottomToY = 0.5f;
+            bottomToY = 1f;
         }
 
         //Animation effect for the top image
@@ -156,6 +170,8 @@ public class PairFragment extends Fragment implements SensorEventListener {
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     //after the animation, hind the 2 lines in the center (let them "GONE")
+                    mAVI.setVisibility(View.GONE);
+                    mConnectionMsg.setVisibility(View.GONE);
                     mCountdown.setVisibility(View.GONE);
                     mTopLine.setVisibility(View.GONE);
                     mBottomLine.setVisibility(View.GONE);
@@ -192,13 +208,7 @@ public class PairFragment extends Fragment implements SensorEventListener {
                         try {
                             //start vibrate, open shake sound track and show animation effect
                             mHandler.obtainMessage(START_SHAKE).sendToTarget();
-                            Thread.sleep(START_TIME_IN_MILLIS);
-                            //reminder for vibrate again
-//                            mTimeLeftInMillis = START_TIME_IN_MILLIS;
-//                            mHandler.obtainMessage(AGAIN_SHAKE).sendToTarget();
-//                            Thread.sleep(START_TIME_IN_MILLIS);
-//                            mHandler.obtainMessage(END_SHAKE).sendToTarget();
-
+                            Thread.sleep(0);
 
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -234,8 +244,7 @@ public class PairFragment extends Fragment implements SensorEventListener {
     private void updateCountDownText() {
 //        int minutes = (int) (mTimeLeftInMillis / 1000) / 60;
 
-
-        int seconds = (int) (mTimeLeftInMillis / 1000);
+        int seconds = (int) (mTimeLeftInMillis / 1000) - 1;
 //
 //        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d",  seconds);
 
@@ -260,12 +269,14 @@ public class PairFragment extends Fragment implements SensorEventListener {
                 case START_SHAKE:
 
                     pairFragment.mVibrator.vibrate(300);
-
+                    mAVI.setVisibility(View.VISIBLE);
+                    mConnectionMsg.setVisibility(View.VISIBLE);
                     mCountdown.setVisibility(View.VISIBLE);
                     //
                     mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
                         @Override
                         public void onTick(long millisUntilFinished) {
+                            shakeJoin();
                             mTimeLeftInMillis = millisUntilFinished;
                             updateCountDownText();
                         }
@@ -273,7 +284,6 @@ public class PairFragment extends Fragment implements SensorEventListener {
                         @Override
                         public void onFinish() {
                             mTimerRunning = false;
-
 
                             //entire effect end , set vibrate to false
                             isShake = false;
@@ -293,21 +303,46 @@ public class PairFragment extends Fragment implements SensorEventListener {
                     mBottomLine.setVisibility(View.VISIBLE);
                     startAnimation(false);// animation of split the shakehand picture into 2
                     break;
-//                case AGAIN_SHAKE:
-//                    mTimeLeftInMillis = START_TIME_IN_MILLIS;
-//                    mTimerRunning = true;
-//
-//                    pairFragment.mVibrator.vibrate(300);
-//                    break;
-//                case END_SHAKE:
-//                    //Stop timer
-//                    mTimerRunning = false;
-//                    //entire effect end , set vibrate to false
-//                    isShake = false;
-//                    // two pictures return to original place
-//                    startAnimation(true);
-//                    break;
             }
         }
     }
+
+    private void shakeJoin(){
+        String url = "/event";
+
+        JSONObject body = new JSONObject();
+        try {
+            Location location_data = ((JioActivity) ActivityManager.getAc(JioActivity.name)).getLastKnownLocation();
+            body.put(General.ID, -1);
+            body.put(General.ACCOUNTID, General.user.getAccountId());
+            body.put(General.LATITUDE, location_data.getLatitude());
+            body.put(General.LONGITUDE, location_data.getLongitude());
+
+            General.httpRequest(mContext,General.HTTP_POST,url, body, false, new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        switch (response.getInt(General.HTTP_STATUS_KEY)){
+                            case General.HTTP_SUCCESS:
+                                General.makeToast(mContext, "Api works");
+                                //TODO
+                                    // check return stats (if status is true, onFinish(). popup a dialog box)
+                                    break;
+                            case General.HTTP_EXCEPTION:
+                                General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
+                                break;
+                            case General.HTTP_FAIL:
+                                General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
+                                break;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
