@@ -106,7 +106,7 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
     private void checkInEvent(){
         if (General.user.getInEventStatus() != General.USER_NOT_IN_EVENT){
             try {
-                General.httpRequest(mContext, General.HTTP_POST, "/event/" + General.user.getInEventStatus(),null,false, new JsonHttpResponseHandler(){
+                General.httpRequest(mContext, General.HTTP_GET, "/event/" + General.user.getInEventStatus(),null,false, new JsonHttpResponseHandler(){
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);

@@ -68,8 +68,9 @@ public class MemberListAdapter extends BaseAdapter {
         holder.admin_tag.setVisibility(user.getAccountId() == this.event_id ? View.VISIBLE : View.INVISIBLE);
         holder.name.setText(user.getNickName());
         holder.email.setText(user.getEmail());
-        holder.avatar.setImageBitmap(General.getCroppedBitmap(General.base64ToBitmap(user.getAvatar())));
-
+        if (!user.getAvatar().equals("null")) {
+            holder.avatar.setImageBitmap(General.getCroppedBitmap(General.base64ToBitmap(user.getAvatar())));
+        }
         return view;
     }
 
