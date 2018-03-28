@@ -60,6 +60,7 @@ public class EventActivity extends AppCompatActivity {
     public void finish() {
         ActivityManager.remove(name);
         setResult(RESULT_CODE);
+        General.currentEvent = null;
         super.finish();
     }
 

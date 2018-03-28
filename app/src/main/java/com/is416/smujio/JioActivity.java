@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
@@ -19,10 +20,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.is416.smujio.adapter.JioFragmentPagerAdapter;
+import com.is416.smujio.model.Event;
 import com.is416.smujio.util.ActivityManager;
 import com.is416.smujio.util.General;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Field;
+
+import cz.msebera.android.httpclient.Header;
 
 public class JioActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, BottomNavigationView.OnNavigationItemSelectedListener,
         LocationListener {
@@ -83,6 +91,8 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
             this.fallback_window.setVisibility(View.VISIBLE);
             this.main_window.setVisibility(View.GONE);
         }
+
+        checkInEvent();
     }
 
     private void addListeners() {
@@ -91,6 +101,44 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
         this.options.setOnClickListener((v)->{
             showPopupMenu(mContext, v);
         });
+    }
+
+    private void checkInEvent(){
+        if (General.user.getInEventStatus() != General.USER_NOT_IN_EVENT){
+            try {
+                General.httpRequest(mContext, General.HTTP_GET, "/event/" + General.user.getInEventStatus(),null,false, new JsonHttpResponseHandler(){
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        try {
+                            switch (response.getInt(General.HTTP_STATUS_KEY)){
+                                case General.HTTP_SUCCESS:
+                                    Event e = Event.JsonToObject(response.getJSONObject(General.HTTP_DATA_KEY));
+                                    General.currentEvent = e;
+                                    Intent intent = new Intent(mContext, EventActivity.class);
+                                    startActivityForResult(intent,EVENT_DETAIL_REQUEST_CODE);
+                                    break;
+                                case General.HTTP_EXCEPTION:
+                                    General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
+                                    break;
+                                case General.HTTP_FAIL:
+                                    General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        super.onFailure(statusCode, headers, throwable, errorResponse);
+                        General.makeToast(mContext, mContext.getResources().getText(R.string.unknown_error).toString());
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
