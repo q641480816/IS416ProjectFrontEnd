@@ -187,7 +187,7 @@ public class LandingActivity extends AppCompatActivity {
             JSONObject body = new JSONObject();
             body.put("email", email);
             body.put("password", password);
-            General.httpRequest(mContext, General.HTTP_POST, "/createUser",body,false, new JsonHttpResponseHandler(){
+            General.httpRequest(mContext, General.HTTP_POST, "/user",body,false, new JsonHttpResponseHandler(){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
