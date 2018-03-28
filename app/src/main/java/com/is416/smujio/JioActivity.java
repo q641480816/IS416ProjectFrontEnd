@@ -152,6 +152,7 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
 
     @Override
     public void onProviderEnabled(String s) {
+        System.out.println("en");
         if (isInit){
             this.fallback_window.setVisibility(View.GONE);
             this.main_window.setVisibility(View.VISIBLE);
@@ -163,6 +164,7 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
 
     @Override
     public void onProviderDisabled(String s) {
+        System.out.println("dis");
         this.fallback_window.setVisibility(View.VISIBLE);
         this.main_window.setVisibility(View.GONE);
     }
@@ -224,7 +226,7 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
 
     @Override
     public void onBackPressed() {
-        if (jioFragmentPagerAdapter.isListOpen()){
+        if (isInit && jioFragmentPagerAdapter.isListOpen()){
             jioFragmentPagerAdapter.closeList();
         }else {
             moveTaskToBack(true);

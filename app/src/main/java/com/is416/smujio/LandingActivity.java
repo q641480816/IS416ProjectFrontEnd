@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.is416.smujio.component.LoadingButton;
 import com.is416.smujio.model.User;
+import com.is416.smujio.util.ActivityManager;
 import com.is416.smujio.util.General;
 import com.is416.smujio.util.SharedPreferenceManager;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -89,6 +90,7 @@ public class LandingActivity extends AppCompatActivity {
         this.register.setText(getResources().getString(R.string.register));
         getMetrics();
         loginCheck();
+        ActivityManager.emptyStack();
     }
 
     private void addListeners(){

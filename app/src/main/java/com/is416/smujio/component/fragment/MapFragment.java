@@ -197,12 +197,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                                 JSONArray data = response.getJSONArray(General.HTTP_DATA_KEY);
                                 for (int i = 0; i < data.length(); i ++){
                                     Event e = Event.JsonToObject(data.getJSONObject(i));
-                                    events.add(e);
-                                    MarkerOptions markerOption = new MarkerOptions().position(new LatLng(e.getLatitude(), e.getLongitude()));
-                                    //Custom icon
-                                    markerOption.icon(BitmapDescriptorFactory.fromResource(General.getMarker(e.getType())));
-                                    Marker currentMarker = mGoogleMap.addMarker(markerOption);
-                                    marker_info.put(currentMarker, e);
+                                    if (e.getId() != General.user.getAccountId()) {
+                                        events.add(e);
+                                        MarkerOptions markerOption = new MarkerOptions().position(new LatLng(e.getLatitude(), e.getLongitude()));
+                                        //Custom icon
+                                        markerOption.icon(BitmapDescriptorFactory.fromResource(General.getMarker(e.getType())));
+                                        Marker currentMarker = mGoogleMap.addMarker(markerOption);
+                                        marker_info.put(currentMarker, e);
+                                    }
                                 }
                                 eventListAdapter.update(events);
                                 break;

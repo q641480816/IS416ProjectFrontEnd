@@ -5,6 +5,7 @@
     <string name="unknown_error">Unknown Error</string>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
 
     <!--main menu-->
     <string name="profile">Profile</string>
