@@ -1,26 +1,28 @@
 package com.is416.smujio;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.menu.MenuPopupHelper;
+import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.is416.smujio.adapter.JioFragmentPagerAdapter;
 import com.is416.smujio.util.ActivityManager;
 import com.is416.smujio.util.General;
+
+import java.lang.reflect.Field;
 
 public class JioActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, BottomNavigationView.OnNavigationItemSelectedListener,
         LocationListener {
@@ -41,6 +43,7 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
     private BottomNavigationView bottomNavigationView;
     private LinearLayout main_window;
     private LinearLayout fallback_window;
+    private ImageView options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,7 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
         this.bottomNavigationView = findViewById(R.id.bt_nav);
         this.main_window = findViewById(R.id.main_window);
         this.fallback_window = findViewById(R.id.fallback_window);
+        this.options = findViewById(R.id.options);
     }
 
     private void init() {
@@ -84,6 +88,9 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
     private void addListeners() {
         this.main_content.addOnPageChangeListener(this);
         this.bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        this.options.setOnClickListener((v)->{
+            showPopupMenu(mContext, v);
+        });
     }
 
     @Override
@@ -219,7 +226,7 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
 
     @Override
     public void onBackPressed() {
-        if (jioFragmentPagerAdapter.isListOpen()){
+        if (isInit && jioFragmentPagerAdapter.isListOpen()){
             jioFragmentPagerAdapter.closeList();
         }else {
             moveTaskToBack(true);
@@ -237,6 +244,33 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
         super.onPause();
     }
 
+    @SuppressLint("RestrictedApi")
+    private void showPopupMenu(final Context context, View ancher) {
+        PopupMenu popupMenu = new PopupMenu(context, ancher);
+        popupMenu.inflate(R.menu.main_hamberger_menu);
+        popupMenu.setOnMenuItemClickListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.menu_profile:
+                    Intent it = new Intent(this, ProfileActivity.class);
+                    startActivity(it);
+                    break;
+                case R.id.menu_setting:
+                    System.out.println("setting");
+                    break;
+            }
+            return true;
+        });
+        try {
+            Field field = popupMenu.getClass().getDeclaredField("mPopup");
+            field.setAccessible(true);
+            MenuPopupHelper mHelper = (MenuPopupHelper) field.get(popupMenu);
+            mHelper.setForceShowIcon(true);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        popupMenu.show();
+    }
+
     public static final boolean isOPen(final Context context) {
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -245,5 +279,14 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
             return true;
         }
         return false;
+    }
+
+    public void updateMenuState(float alpha){
+        this.options.setAlpha(alpha);
+        this.options.requestLayout();
+    }
+
+    public void updateMenuState(boolean isVisible){
+        this.options.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 }

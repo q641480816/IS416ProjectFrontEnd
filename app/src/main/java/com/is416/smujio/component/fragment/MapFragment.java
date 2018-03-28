@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -111,9 +112,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
     @SuppressLint("ClickableViewAccessibility")
     private void addListener() {
-        this.list_top.setOnClickListener(view -> {
-            System.out.println("open");
-        });
+        this.list_top.setOnClickListener(view -> {});
         this.list_top_back_back.setOnClickListener((v)->{
             if (isListOpen){
                 reDrawList(false);
@@ -144,6 +143,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     return false;
                 default:
                     return false;
+            }
+        });
+
+        this.event_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                JoinEventDialog joinEventDialog = new JoinEventDialog(mContext, "",((Event) adapterView.getItemAtPosition(i)));
+                joinEventDialog.show();
             }
         });
     }
@@ -190,12 +197,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                                 JSONArray data = response.getJSONArray(General.HTTP_DATA_KEY);
                                 for (int i = 0; i < data.length(); i ++){
                                     Event e = Event.JsonToObject(data.getJSONObject(i));
-                                    events.add(e);
-                                    MarkerOptions markerOption = new MarkerOptions().position(new LatLng(e.getLatitude(), e.getLongitude()));
-                                    //Custom icon
-                                    markerOption.icon(BitmapDescriptorFactory.fromResource(General.getMarker(e.getType())));
-                                    Marker currentMarker = mGoogleMap.addMarker(markerOption);
-                                    marker_info.put(currentMarker, e);
+                                    if (e.getId() != General.user.getAccountId()) {
+                                        events.add(e);
+                                        MarkerOptions markerOption = new MarkerOptions().position(new LatLng(e.getLatitude(), e.getLongitude()));
+                                        //Custom icon
+                                        markerOption.icon(BitmapDescriptorFactory.fromResource(General.getMarker(e.getType())));
+                                        Marker currentMarker = mGoogleMap.addMarker(markerOption);
+                                        marker_info.put(currentMarker, e);
+                                    }
                                 }
                                 eventListAdapter.update(events);
                                 break;
@@ -234,9 +243,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         this.mGoogleMap.getUiSettings().setScrollGesturesEnabled(!isOpen);
         ValueAnimator anim = isOpen ? ValueAnimator.ofFloat(1f, 0f) : ValueAnimator.ofFloat(0f, 1f);
         if (isOpen){
-            this.list_top_back.setVisibility(View.VISIBLE);
+            list_top_back.setVisibility(View.VISIBLE);
         }else {
             this.list_top_front.setVisibility(View.VISIBLE);
+            ((JioActivity) ActivityManager.getAc("MAIN")).updateMenuState(true);
         }
         anim.setDuration(400);
         anim.addUpdateListener(animation -> {
@@ -247,6 +257,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             params.setMargins(side, top, side, 0);
             this.list_container.setLayoutParams(params);
             this.list_top_front.setAlpha(currentValue);
+            ((JioActivity) ActivityManager.getAc("MAIN")).updateMenuState(currentValue);
             this.list_top_back.setAlpha(1 - currentValue);
             this.event_list.setAlpha(1 - currentValue);
             this.list_top_back.requestLayout();
@@ -258,6 +269,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             public void onAnimationEnd(Animator animation) {
                 list_top_back.setVisibility(isOpen? View.VISIBLE : View.GONE);
                 list_top_front.setVisibility(isOpen? View.GONE : View.VISIBLE);
+                if (isOpen){
+                    ((JioActivity) ActivityManager.getAc("MAIN")).updateMenuState(false);
+                }
                 super.onAnimationEnd(animation);
             }
         });

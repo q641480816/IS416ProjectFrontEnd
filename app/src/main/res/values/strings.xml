@@ -5,6 +5,11 @@
     <string name="unknown_error">Unknown Error</string>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+
+    <!--main menu-->
+    <string name="profile">Profile</string>
+    <string name="setting">Setting</string>
 
     <!-- landing -->
     <string name="register">Register</string>
@@ -32,4 +37,12 @@
     <string name="event_leave_group_title">Leave Group</string>
     <string name="event_leave_group_body">Are you sure you want to Leave this Group?</string>
     <string name="event_leave_group_body_admin">Are you sure you want to Leave and dismiss this Group?</string>
+
+    <!--profile-->
+    <string name="profile_logout">Logout</string>
+    <string name="profile_email">Email</string>
+    <string name="profile_nick_name">Nick Name</string>
+    <string name="profile_gender">Gender</string>
+    <string name="profile_gender_male">Male</string>
+    <string name="profile_gender_female">Female</string>
 </resources>
