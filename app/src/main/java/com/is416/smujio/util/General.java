@@ -94,9 +94,11 @@ public class General {
     public static final String SIZELIMIT = "sizeLimit";
 
     public static final String EVENT_TYPE_MOVIE = "MOVIE";
-    public static final String EVENT_TYPE_BAR = "BAR";
+    public static final String EVENT_TYPE_DRINK = "DRINK";
     public static final String EVENT_TYPE_DINE = "DINE";
-
+    public static final String EVENT_TYPE_LOVE = "LOVE";
+    public static final String EVENT_TYPE_PROJECT = "PROJECT";
+    public static final String EVENT_TYPE_STUDY = "STUDY";
     //Values
 
     public static final int HTTP_GET = 0;
@@ -147,11 +149,20 @@ public class General {
             case EVENT_TYPE_MOVIE:
                 id = R.mipmap.movie;
                 break;
-            case EVENT_TYPE_BAR:
-                id = R.mipmap.bar;
+            case EVENT_TYPE_DRINK:
+                id = R.mipmap.drink;
                 break;
             case EVENT_TYPE_DINE:
                 id = R.mipmap.dine;
+                break;
+            case EVENT_TYPE_LOVE:
+                id = R.mipmap.love;
+                break;
+            case EVENT_TYPE_PROJECT:
+                id = R.mipmap.project;
+                break;
+            case EVENT_TYPE_STUDY:
+                id = R.mipmap.study;
                 break;
         }
 
