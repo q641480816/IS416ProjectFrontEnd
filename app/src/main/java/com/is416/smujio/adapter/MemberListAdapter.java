@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.is416.smujio.R;
 import com.is416.smujio.model.Event;
 import com.is416.smujio.model.User;
+import com.is416.smujio.util.General;
 
 import java.util.ArrayList;
 
@@ -67,6 +68,7 @@ public class MemberListAdapter extends BaseAdapter {
         holder.admin_tag.setVisibility(user.getAccountId() == this.event_id ? View.VISIBLE : View.INVISIBLE);
         holder.name.setText(user.getNickName());
         holder.email.setText(user.getEmail());
+        holder.avatar.setImageBitmap(General.getCroppedBitmap(General.base64ToBitmap(user.getAvatar())));
 
         return view;
     }

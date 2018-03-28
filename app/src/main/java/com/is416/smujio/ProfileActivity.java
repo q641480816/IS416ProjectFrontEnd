@@ -105,7 +105,7 @@ public class ProfileActivity extends AppCompatActivity {
         this.nickname.setFocusable(false);
         this.avatar_content_base64 = this.user.getAvatar();
         if (!this.avatar_content_base64.equals("null")) {
-            this.avatar_content = General.base64ToBitmap(this.avatar_content_base64);
+            this.avatar_content = General.getCroppedBitmap(General.base64ToBitmap(this.avatar_content_base64));
             this.avatar.setImageBitmap(this.avatar_content);
         }
 
