@@ -16,6 +16,7 @@ import com.is416.smujio.R;
 import com.is416.smujio.model.Event;
 import com.is416.smujio.util.ActivityManager;
 import com.is416.smujio.util.General;
+import com.is416.smujio.util.SharedPreferenceManager;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -36,7 +37,15 @@ public class EventSocketService extends Service {
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         mContext = this;
-        this.account_id = intent.getLongExtra(General.ACCOUNTID, -1);
+        try {
+            this.account_id = intent.getLongExtra(General.ACCOUNTID, -1);
+        }catch (NullPointerException ne){
+            if (!SharedPreferenceManager.get(General.PERSIST, mContext).equals(SharedPreferenceManager.nullable)){
+                this.account_id = Long.parseLong(SharedPreferenceManager.get(General.ACCOUNTID,mContext));
+            }else {
+                stopSelf();
+            }
+        }
         this.client = new OkHttpClient();
         init();
         return super.onStartCommand(intent, flags, startId);
