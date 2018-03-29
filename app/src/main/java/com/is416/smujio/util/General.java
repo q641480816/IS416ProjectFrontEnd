@@ -97,7 +97,7 @@ public class General {
     public static final String EVENT_TYPE_MOVIE = "MOVIE";
     public static final String EVENT_TYPE_DRINK = "DRINK";
     public static final String EVENT_TYPE_DINE = "DINE";
-    public static final String EVENT_TYPE_LOVE = "LOVE";
+    public static final String EVENT_TYPE_DATE = "DATE";
     public static final String EVENT_TYPE_PROJECT = "PROJECT";
     public static final String EVENT_TYPE_STUDY = "STUDY";
     //Values
@@ -144,6 +144,8 @@ public class General {
 
     }
 
+
+
     public static int getMarker(String type){
         int id = 0;
         switch (type){
@@ -156,8 +158,8 @@ public class General {
             case EVENT_TYPE_DINE:
                 id = R.mipmap.dine;
                 break;
-            case EVENT_TYPE_LOVE:
-                id = R.mipmap.love;
+            case EVENT_TYPE_DATE:
+                id = R.mipmap.date;
                 break;
             case EVENT_TYPE_PROJECT:
                 id = R.mipmap.project;

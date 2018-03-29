@@ -41,6 +41,7 @@ public class JoinEventDialog extends Dialog {
     private TextView group_size;
     private LoadingButton join_bt;
     private ImageView close;
+    private ImageView imageType;
 
     public JoinEventDialog(@NonNull Context context, String master, Event event) {
         super(context);
@@ -84,6 +85,7 @@ public class JoinEventDialog extends Dialog {
         this.group_size = findViewById(R.id.group_size);
         this.join_bt = findViewById(R.id.join);
         this.close = findViewById(R.id.close);
+        this.imageType = findViewById(R.id.imageType);
     }
 
     private void init(){
@@ -93,6 +95,29 @@ public class JoinEventDialog extends Dialog {
         location.setText(event.getLocation());
         group_size.setText(event.getParticipantsCount() + "Person(s)");
         join_bt.setText(mContext.getResources().getString(R.string.join_event_title));
+
+        switch(event.getType()){
+
+            case "DINE":
+
+                imageType.setImageResource(R.mipmap.dine);
+                break;
+            case "DRINK":
+                imageType.setImageResource(R.mipmap.drink);
+                break;
+            case "DATE":
+                imageType.setImageResource(R.mipmap.date);
+                break;
+            case "MOVIE":
+                imageType.setImageResource(R.mipmap.movie);
+                break;
+            case "PROJECT":
+                imageType.setImageResource(R.mipmap.project);
+                break;
+            case "STUDY":
+                imageType.setImageResource(R.mipmap.study);
+                break;
+        }
     }
 
     private void addListener(){

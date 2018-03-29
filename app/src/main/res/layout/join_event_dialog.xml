@@ -63,7 +63,7 @@
                         android:layout_centerVertical="true"
                         android:layout_toEndOf="@+id/imageType"
                         android:text="Event_Name"
-                        android:textSize="34sp"
+                        android:textSize="28sp"
                         android:textStyle="bold" />
 
                 </RelativeLayout>
@@ -86,7 +86,7 @@
                         android:id="@+id/location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="24sp"
+                        android:textSize="18sp"
                         android:text="Location Name"/>
 
                 </LinearLayout>
@@ -106,7 +106,7 @@
                         android:id="@+id/group_size"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="24sp"
+                        android:textSize="18sp"
                         android:text="Num of People"/>
 
                 </LinearLayout>
