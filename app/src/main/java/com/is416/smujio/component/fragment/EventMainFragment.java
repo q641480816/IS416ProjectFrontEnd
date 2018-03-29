@@ -133,6 +133,12 @@ public class EventMainFragment extends Fragment{
         }
     }
 
+    public void update(){
+        this.event = ((EventActivity) ActivityManager.getAc(master)).getEvent();
+        this.memberListAdapter.update(this.event.getParticipants());
+        this.members.setText(" " + this.event.getParticipantsCount());
+    }
+
     private void finish(){
         ((EventActivity) ActivityManager.getAc(master)).finish();
     }

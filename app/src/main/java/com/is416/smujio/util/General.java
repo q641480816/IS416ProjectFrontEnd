@@ -51,6 +51,7 @@ public class General {
     public static String email;
     public static User user;
     public static Event currentEvent;
+    public static boolean isForeground = false;
 
     //Keys!!!!!!!!!!!!!!!!!!!!!!!
     public static final String PERSIST = "PERSIST";
@@ -112,6 +113,13 @@ public class General {
     public static final int GENDER_MALE = 0;
     public static final int GENDER_FEMALE = 1;
     public static final int USER_NOT_IN_EVENT = -1;
+
+    //socket
+    public static final String SOCKETSTATUS = "status";
+    public static final String SOCKETREGISTER = "register";
+    public static final String SOCKETUNREGISTER = "unregister";
+    public static final String SOCKETUPDATE = "update";
+    public static final String SOCKETCLOSE = "close";
 
     public static void makeToast(Context c, String message){
         Toast.makeText(c, message, Toast.LENGTH_LONG).show();

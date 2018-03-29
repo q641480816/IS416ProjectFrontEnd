@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 
 import com.is416.smujio.adapter.JioFragmentPagerAdapter;
 import com.is416.smujio.model.Event;
+import com.is416.smujio.service.EventSocketService;
 import com.is416.smujio.util.ActivityManager;
 import com.is416.smujio.util.General;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -92,6 +93,9 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
             this.main_window.setVisibility(View.GONE);
         }
 
+        Intent it = new Intent(mContext, EventSocketService.class);
+        it.putExtra(General.ACCOUNTID, General.user.getAccountId());
+        startService(it);
         checkInEvent();
     }
 

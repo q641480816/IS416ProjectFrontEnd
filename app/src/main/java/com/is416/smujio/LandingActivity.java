@@ -241,6 +241,7 @@ public class LandingActivity extends AppCompatActivity {
                                     HashMap<String, String> values = new HashMap<>();
                                     values.put(General.EMAIL, email);
                                     values.put(General.PASSWORD, password);
+                                    values.put(General.ACCOUNTID,General.user.getAccountId()+"");
                                     values.put(General.PERSIST, "TRUE");
                                     SharedPreferenceManager.saveMultiple(values, mContext);
                                 }

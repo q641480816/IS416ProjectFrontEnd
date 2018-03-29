@@ -47,4 +47,8 @@ public class EventFragmentAdapter extends FragmentPagerAdapter {
         }
         return fragment;
     }
+
+    public void update(){
+        this.eventMainFragment.update();
+    }
 }

@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class ActivityManager {
 
-    private static HashMap<String ,Activity> activities;
+    private static HashMap<String ,Activity> activities = new HashMap<>();
 
     public static void add(String name, Activity ac){
         if(activities == null){
@@ -38,5 +38,9 @@ public class ActivityManager {
             }
         }
         System.gc();
+    }
+
+    public static boolean isRunning(){
+        return activities.size() != 0;
     }
 }

@@ -31,7 +31,12 @@
         </activity>
         <activity android:name=".JioActivity" />
         <activity android:name=".EventActivity" />
-        <activity android:name=".ProfileActivity"/>
+        <activity android:name=".ProfileActivity" />
+
+        <service
+            android:name=".service.EventSocketService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
