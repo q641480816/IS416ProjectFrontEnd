@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -85,6 +86,12 @@ public class EventMainFragment extends Fragment{
                         // User cancelled the dialog
                         dialog.dismiss();
                     }).create().show();
+        });
+
+        this.location.setOnClickListener((v)->{
+            Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                    Uri.parse("http://maps.google.com/maps?daddr="+this.event.getLatitude()+","+this.event.getLongitude()));
+            startActivity(intent);
         });
     }
 
