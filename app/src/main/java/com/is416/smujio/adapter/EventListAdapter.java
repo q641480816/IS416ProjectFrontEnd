@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.is416.smujio.R;
 import com.is416.smujio.model.Event;
+import com.is416.smujio.util.General;
 
 import java.util.ArrayList;
 
@@ -51,7 +52,7 @@ public class EventListAdapter extends BaseAdapter{
         if (view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.event_list_item, viewGroup,false);
             holder = new ViewHolder();
-            //holder.event_icon = null;
+            holder.event_icon = (ImageView)view.findViewById(R.id.imageType);
             holder.type = (TextView) view.findViewById(R.id.type);
             holder.location = (TextView) view.findViewById(R.id.location);
             view.setTag(holder);
@@ -59,6 +60,7 @@ public class EventListAdapter extends BaseAdapter{
             holder = (ViewHolder)view.getTag();
         }
 
+        holder.event_icon.setImageResource(General.getMarker(e.getType()));
         holder.type.setText(e.getType());
         holder.location.setText(e.getLocation());
 
