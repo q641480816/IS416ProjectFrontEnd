@@ -112,6 +112,7 @@ public class ProfileActivity extends AppCompatActivity {
         this.avatar_target = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                bitmap = General.comp(bitmap);
                 avatar_content = General.getCroppedBitmap(bitmap);
                 avatar_content_base64 = General.bitmapToBase64(bitmap);
                 avatar.setImageBitmap(avatar_content);
