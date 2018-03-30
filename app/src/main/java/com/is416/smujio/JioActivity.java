@@ -245,7 +245,6 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
                     myProvider = LocationManager.GPS_PROVIDER;
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this, null);
                 } else {
-                    General.makeToast(mContext, "GG");
                     myProvider = LocationManager.NETWORK_PROVIDER;
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 500000000, 500000000, this, null);
                 }

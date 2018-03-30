@@ -25,13 +25,14 @@
     <string name="tab_menu_pair">Shake</string>
 
     <!--Jio main-->
-    <string name="no_location_provider_warning_1">Please turn on your location service.</string>
-    <string name="no_location_provider_warning_2">Asshole!!! ( ╯-_-)╯┴—┴</string>
+    <string name="no_location_provider_warning_1">Cannot find your location!</string>
+    <string name="no_location_provider_warning_2">Please turn on your Location Services. For best experience, please set it to High Accuracy!</string>
+    <string name="no_location_provider_warning_3">TURN IT ON</string>
+    <!--<string name="no_location_provider_warning_2">Asshole!!! ( ╯-_-)╯┴—┴</string>-->
     <!--join event dialog-->
-    <string name="join_event_title">Join Event</string>
+    <string name="join_event_title">Join Event!</string>
     <!--init event dialog-->
-    <string name="init_event_title">Start an Event</string>
-    <string name="init_event_start">Start!</string>
+    <string name="init_event_start">Start Event!</string>
 
     <!-- event -->
     <string name="event_leave_group_title">Leave Group</string>

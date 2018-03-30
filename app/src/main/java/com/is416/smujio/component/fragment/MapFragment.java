@@ -332,7 +332,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                                     events.put(e.getId(), e);
                                     MarkerOptions markerOption = new MarkerOptions().position(new LatLng(e.getLatitude(), e.getLongitude()));
                                     //Custom icon
-                                    markerOption.icon(BitmapDescriptorFactory.fromResource(General.getMarker(e.getType())));
+                                    markerOption.icon(BitmapDescriptorFactory.fromResource(General.getIcon(e.getType())));
                                     Marker currentMarker = mGoogleMap.addMarker(markerOption);
                                     marker_info.put(currentMarker, e);
                                     eventListAdapter.updateOne(e);

@@ -162,22 +162,22 @@ public class General {
         int id = 0;
         switch (type){
             case EVENT_TYPE_MOVIE:
-                id = R.mipmap.movie;
+                id = R.mipmap.movie_pinicon;
                 break;
             case EVENT_TYPE_DRINK:
-                id = R.mipmap.drink;
+                id = R.mipmap.drink_pinicon;
                 break;
             case EVENT_TYPE_DINE:
-                id = R.mipmap.dine;
+                id = R.mipmap.dine_pinicon;
                 break;
             case EVENT_TYPE_DATE:
-                id = R.mipmap.date;
+                id = R.mipmap.date_pinicon;
                 break;
             case EVENT_TYPE_PROJECT:
-                id = R.mipmap.project;
+                id = R.mipmap.project_pinicon;
                 break;
             case EVENT_TYPE_STUDY:
-                id = R.mipmap.study;
+                id = R.mipmap.study_pinicon;
                 break;
         }
 
