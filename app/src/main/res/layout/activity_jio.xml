@@ -65,6 +65,7 @@
                         />
 
                         <Button
+                            android:id="@+id/turn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/no_location_provider_warning_3"/>

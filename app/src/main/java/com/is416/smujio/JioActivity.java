@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
@@ -16,6 +17,7 @@ import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -42,6 +44,7 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
     private Context mContext;
     public static final String name = "MAIN";
     public static final int EVENT_DETAIL_REQUEST_CODE = 999;
+    public static final int SETTING_PERMISSION_REQUEST = 10000;
     public static final int PAGE_ONE = 0;
     public static final int PAGE_TWO = 1;
     public static final String LOCATION_SERVICE = Context.LOCATION_SERVICE;
@@ -58,6 +61,7 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
     private LinearLayout main_window;
     private LinearLayout fallback_window;
     private ImageView options;
+    private Button turn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +82,7 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
         this.main_window = findViewById(R.id.main_window);
         this.fallback_window = findViewById(R.id.fallback_window);
         this.options = findViewById(R.id.options);
+        this.turn = findViewById(R.id.turn);
     }
 
     private void init() {
@@ -109,6 +114,9 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
         this.bottomNavigationView.setOnNavigationItemSelectedListener(this);
         this.options.setOnClickListener((v)->{
             showPopupMenu(mContext, v);
+        });
+        this.turn.setOnClickListener((v)->{
+            startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),SETTING_PERMISSION_REQUEST);
         });
     }
 
@@ -318,6 +326,11 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
             if (isInit) {
                 this.updateAllEvent();
             }else {
+                init();
+                addListeners();
+            }
+        }else if(requestCode == SETTING_PERMISSION_REQUEST){
+            if (isOPen(mContext)){
                 init();
                 addListeners();
             }

@@ -115,6 +115,7 @@ public class General {
     public static final int GENDER_MALE = 0;
     public static final int GENDER_FEMALE = 1;
     public static final int USER_NOT_IN_EVENT = -1;
+    public static final String PAIR_IN_EVENT = "In event, no entry";
 
     //socket
     public static final String SOCKETSTATUS = "status";

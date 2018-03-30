@@ -3,6 +3,7 @@ package com.is416.smujio.component.fragment;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -27,10 +28,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.is416.smujio.EventActivity;
 import com.is416.smujio.JioActivity;
 import com.is416.smujio.R;
 import com.is416.smujio.component.dialog.InitEventDialog;
+import com.is416.smujio.model.Event;
 import com.is416.smujio.util.ActivityManager;
 import com.is416.smujio.util.General;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -41,6 +47,8 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -58,6 +66,8 @@ public class PairFragment extends Fragment implements SensorEventListener {
     private static final int START_SHAKE = 0x1;
     private static final int AGAIN_SHAKE = 0x2;
     private static final int END_SHAKE = 0x3;
+    private boolean isPaired = false;
+    private long id;
 
     public SensorManager mSensorManager;
     public Sensor mAccelerometerSensor;
@@ -107,7 +117,7 @@ public class PairFragment extends Fragment implements SensorEventListener {
     private void bindView() {
         mTopPart = mainView.findViewById(R.id.main_shake_top);
         mTopLayout = mainView.findViewById(R.id.main_linear_top);
-        mBottomLayout =  mainView.findViewById(R.id.main_linear_bottom);
+        mBottomLayout = mainView.findViewById(R.id.main_linear_bottom);
         mTopLine = mainView.findViewById(R.id.main_shake_top_line);
         mBottomLine = mainView.findViewById(R.id.main_shake_bottom_line);
         mAVI = mainView.findViewById(R.id.avi);
@@ -123,8 +133,6 @@ public class PairFragment extends Fragment implements SensorEventListener {
     }
 
     private void addListener() {
-
-
 
     }
 
@@ -179,9 +187,13 @@ public class PairFragment extends Fragment implements SensorEventListener {
         if (isBack) {
             bottomAnim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
-                public void onAnimationStart(Animation animation) {}
+                public void onAnimationStart(Animation animation) {
+                }
+
                 @Override
-                public void onAnimationRepeat(Animation animation) {}
+                public void onAnimationRepeat(Animation animation) {
+                }
+
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     //after the animation, hind the 2 lines in the center (let them "GONE")
@@ -196,7 +208,6 @@ public class PairFragment extends Fragment implements SensorEventListener {
         // set animation
         mTopLayout.startAnimation(topAnim);
         mBottomLayout.startAnimation(bottomAnim);
-
     }
 
     @Override
@@ -239,7 +250,7 @@ public class PairFragment extends Fragment implements SensorEventListener {
 
     }
 
-    public void toggleShakeListener(boolean isOpen){
+    public void toggleShakeListener(boolean isOpen) {
         if (isOpen) {
             if (mSensorManager != null) {
                 //Obtain AccelerometerSensor
@@ -248,24 +259,19 @@ public class PairFragment extends Fragment implements SensorEventListener {
                     mSensorManager.registerListener(this, mAccelerometerSensor, SensorManager.SENSOR_DELAY_UI);
                 }
             }
-        }else {
+        } else {
             mSensorManager.unregisterListener(this);
         }
     }
 
-    private void updateCountDownText() {
-//        int minutes = (int) (mTimeLeftInMillis / 1000) / 60;
-
-        int seconds = (int) (mTimeLeftInMillis / 1000) - 1;
-//
-//        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d",  seconds);
-
-        mCountdown.setText(""+seconds);
+    private void updateCountDownText(long mTimeLeftInMillis) {
+        mCountdown.setText("" + mTimeLeftInMillis);
     }
 
     private class MyHandler extends Handler {
         private WeakReference<PairFragment> mReference;
         private PairFragment pairFragment;
+
         public MyHandler(PairFragment fragment) {
             mReference = new WeakReference<>(fragment);
             if (mReference != null) {
@@ -278,69 +284,71 @@ public class PairFragment extends Fragment implements SensorEventListener {
             super.handleMessage(msg);
             switch (msg.what) {
                 case START_SHAKE:
-
-                    shakePaired();
                     pairFragment.mVibrator.vibrate(300);
                     mAVI.setVisibility(View.VISIBLE);
                     mConnectionMsg.setVisibility(View.VISIBLE);
                     mCountdown.setVisibility(View.VISIBLE);
                     mTimerRunning = true;
-
                     //This method requires the caller to hold the permission VIBRATE.
                     // open shake sound track
                     pairFragment.mSoundPool.play(mShakeAudio, 1, 1, 0, 0, 1);
                     mTopLine.setVisibility(View.VISIBLE);
                     mBottomLine.setVisibility(View.VISIBLE);
                     startAnimation(false);// animation of split the shakehand picture into 2
-
-
-
-                    mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
+                    Timer t = new Timer();
+                    t.schedule(new TimerTask() {
                         @Override
-                        public void onTick(long millisUntilFinished) {
-                            if (eventStatus) {
-                                System.out.print("Paired");
-                                mCountDownTimer.cancel();
-                            } else {
-                                shakeJoin();
-
-                                mTimeLeftInMillis = millisUntilFinished;
-                                updateCountDownText();
-
-                                if (millisUntilFinished == 1000) {
-                                    lastCall = true;
-                                }
-                            }
+                        public void run() {
+                            runCountdown(10);
                         }
-
-                        @Override
-                        public void onFinish() {
-                            mTimerRunning = false;
-
-                            //entire effect end , set vibrate to false
-                            isShake = false;
-                            // two pictures return to original place
-                            startAnimation(true);
-
-                            mTimeLeftInMillis = START_TIME_IN_MILLIS;
-
-                            if (eventStatus) {
-                                System.out.print("testing");
-                            }
-                        }
-
-                    }.start();
-
-
+                    }, 1000);
                     break;
             }
-
         }
     }
 
-    private void shakeJoin(){
-        String url = "/event";
+    private void runCountdown(long time) {
+        if (time == 10){
+            General.UIHandler.post(() -> {
+                updateCountDownText(10);
+            });
+        }
+        if (time == 0) {
+            General.UIHandler.post(() -> {
+                toggleShakeListener(true);
+                shakeJoin(true);
+                isShake = false;
+                // two pictures return to original place
+                startAnimation(true);
+            });
+        } else {
+            time--;
+            long finalTime = time;
+            General.UIHandler.post(() -> {
+                shakeJoin(false);
+                updateCountDownText(finalTime);
+                if (isPaired) {
+                    toggleShakeListener(true);
+                    //added
+                    shakePaired();
+                    isShake = false;
+                    // two pictures return to original place
+                    startAnimation(true);
+                } else {
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            runCountdown(finalTime);
+                        }
+                    }, 1000);
+                }
+            });
+        }
+    }
 
+    private void shakeJoin(boolean isLast) {
+        final String[] url = {"/event"};
         JSONObject body = new JSONObject();
         try {
             Location location_data = ((JioActivity) ActivityManager.getAc(JioActivity.name)).getLastKnownLocation();
@@ -351,25 +359,30 @@ public class PairFragment extends Fragment implements SensorEventListener {
             body.put(General.LATITUDE, location_data.getLatitude());
             body.put(General.LONGITUDE, location_data.getLongitude());
             body.put(General.LOCATION, location);
-            body.put(General.LASTCALL, lastCall);
+            body.put(General.LASTCALL, isLast);
             body.put(General.SHAKE, "shake");
-
-            General.httpRequest(mContext,General.HTTP_PUT, url, body, false, new JsonHttpResponseHandler(){
+            General.httpRequest(mContext, General.HTTP_PUT, url[0], body, false, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
-                        switch (response.getInt(General.HTTP_STATUS_KEY)){
+                        switch (response.getInt(General.HTTP_STATUS_KEY)) {
                             case General.HTTP_SUCCESS:
                                 //TODO
                                 JSONObject data = response.getJSONObject(General.HTTP_DATA_KEY);
-                                eventStatus = data.getBoolean(General.EVENTSTATUS);
-
+//                                System.out.println(data);
+                                id = data.getLong(General.ID);
+                                isPaired = data.getBoolean(General.EVENTSTATUS);
+//                                System.out.println(isPaired);
                                 break;
                             case General.HTTP_EXCEPTION:
                                 General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
                                 break;
                             case General.HTTP_FAIL:
-                                General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
+                                if (response.getString(General.HTTP_MESSAGE_KEY).equals(General.PAIR_IN_EVENT)){
+                                    isPaired = true;
+                                }else {
+                                    General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
+                                }
                                 break;
                         }
                     } catch (Exception e) {
@@ -382,23 +395,39 @@ public class PairFragment extends Fragment implements SensorEventListener {
         }
     }
 
-    private void shakePaired(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setMessage("Do you want to pair now?")
-                .setPositiveButton(R.string.yes, (dialog, id) -> {
-                    // create a event now
+    private void shakePaired() {
+        try {
+            General.httpRequest(mContext, General.HTTP_GET, "/event/" + id,null,false, new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    try {
+                        switch (response.getInt(General.HTTP_STATUS_KEY)){
+                            case General.HTTP_SUCCESS:
+                                General.currentEvent = Event.JsonToObject(response.getJSONObject(General.HTTP_DATA_KEY));
+                                Intent it = new Intent(mContext, EventActivity.class);
+                                isShake = false;
+                                startActivityForResult(it, JioActivity.EVENT_DETAIL_REQUEST_CODE);
+                                break;
+                            case General.HTTP_EXCEPTION:
+                                General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
+                                break;
+                            case General.HTTP_FAIL:
+                                General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
 
-                    dialog.dismiss();
-                })
-                .setNegativeButton(R.string.cancel, (dialog, id) -> {
-                    // User cancelled the dialog
-
-                    dialog.dismiss();
-                });
-
-        builder.create();
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                    General.makeToast(mContext, mContext.getResources().getText(R.string.unknown_error).toString());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-//    private void finish(){
-//        ((EventActivity) ActivityManager.getAc(master)).finish();
-//    }
 }
