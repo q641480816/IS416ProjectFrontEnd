@@ -182,6 +182,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
     private void init_event_list(double la, double lo){
+        events = new HashMap<>();
         StringBuffer url = new StringBuffer();
         url.append("/event/all/");
         url.append(la);
