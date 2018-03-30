@@ -16,7 +16,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <ImageView
                 android:id="@+id/close"
                 android:layout_width="24dp"
@@ -27,66 +26,76 @@
         </RelativeLayout>
 
         <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="15dp"
-                android:src="@mipmap/temp_activity"
-                android:id="@+id/imageType"/>
+            android:layout_height="wrap_content"
+            android:gravity="center">
 
             <LinearLayout
-                android:layout_width="0dp"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:orientation="vertical"
-                android:paddingLeft="10dp"
-                android:layout_marginBottom="15dp">
+                android:gravity="center_horizontal">
 
-                <Spinner
-                    android:id="@+id/type"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="5dp" />
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="15dp"
+                    android:src="@mipmap/temp_activity"
+                    android:id="@+id/imageType"/>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:orientation="horizontal">
+                    android:layout_weight="4"
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp"
+                    android:layout_marginBottom="15dp">
 
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_pin_24dp"/>
-
-                    <TextView
-                        android:id="@+id/location"
+                    <Spinner
+                        android:id="@+id/type"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:text="daadsadadad"/>
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="5dp" />
 
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_pin_24dp"/>
+
+                        <TextView
+                            android:id="@+id/location"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:text="daadsadadad"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
+
 
         <com.is416.smujio.component.LoadingButton
             android:id="@+id/init"
