@@ -47,6 +47,7 @@ public class ProfileActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_CHOOSE_AVATAR = 1242;
     public static final int PROFILE_REQUEST_PERMISSION = 7765;
 
+    private ImageView button_back;
     private TextView email;
     private EditText nickname;
     private TextView gender;
@@ -80,6 +81,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void bindView() {
+        this.button_back = findViewById(R.id.button_back);
         this.email = findViewById(R.id.email);
         this.nickname = findViewById(R.id.nickname);
         this.edit_nickname = findViewById(R.id.edit_nickname);
@@ -180,6 +182,9 @@ public class ProfileActivity extends AppCompatActivity {
             Intent it = new Intent(mContext, LandingActivity.class);
             startActivity(it);
             finish();
+        });
+        this.button_back.setOnClickListener((v)->{
+            this.finish();
         });
     }
 
