@@ -95,29 +95,8 @@ public class JoinEventDialog extends Dialog {
         location.setText(event.getLocation());
         group_size.setText(event.getParticipantsCount() + "Person(s)");
         join_bt.setText(mContext.getResources().getString(R.string.join_event_title));
+        imageType.setImageResource(General.getMarker(this.event.getType()));
 
-        switch(event.getType()){
-
-            case "DINE":
-
-                imageType.setImageResource(R.mipmap.dine);
-                break;
-            case "DRINK":
-                imageType.setImageResource(R.mipmap.drink);
-                break;
-            case "DATE":
-                imageType.setImageResource(R.mipmap.date);
-                break;
-            case "MOVIE":
-                imageType.setImageResource(R.mipmap.movie);
-                break;
-            case "PROJECT":
-                imageType.setImageResource(R.mipmap.project);
-                break;
-            case "STUDY":
-                imageType.setImageResource(R.mipmap.study);
-                break;
-        }
     }
 
     private void addListener(){

@@ -75,6 +75,7 @@ public class PairFragment extends Fragment implements SensorEventListener {
 
     private LinearLayout mTopLayout;
     private LinearLayout mBottomLayout;
+    private ImageView mTopPart;
     private ImageView mTopLine;
     private ImageView mBottomLine;
     private TextView mConnectionMsg;
@@ -98,12 +99,13 @@ public class PairFragment extends Fragment implements SensorEventListener {
 
         init();
         bindView();
-//        addListener();
+        addListener();
 
         return mainView;
     }
 
     private void bindView() {
+        mTopPart = mainView.findViewById(R.id.main_shake_top);
         mTopLayout = mainView.findViewById(R.id.main_linear_top);
         mBottomLayout =  mainView.findViewById(R.id.main_linear_bottom);
         mTopLine = mainView.findViewById(R.id.main_shake_top_line);
@@ -121,18 +123,7 @@ public class PairFragment extends Fragment implements SensorEventListener {
     }
 
     private void addListener() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setMessage("Do you want to pair now?")
-                .setPositiveButton(R.string.yes, (dialog, id) -> {
-                    // create a event now
 
-                    dialog.dismiss();
-                })
-                .setNegativeButton(R.string.cancel, (dialog, id) -> {
-                    // User cancelled the dialog
-
-                    dialog.dismiss();
-                });
 
 
     }
@@ -231,6 +222,7 @@ public class PairFragment extends Fragment implements SensorEventListener {
                         try {
                             //start vibrate, open shake sound track and show animation effect
                             mHandler.obtainMessage(START_SHAKE).sendToTarget();
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -287,10 +279,20 @@ public class PairFragment extends Fragment implements SensorEventListener {
             switch (msg.what) {
                 case START_SHAKE:
 
+                    shakePaired();
                     pairFragment.mVibrator.vibrate(300);
                     mAVI.setVisibility(View.VISIBLE);
                     mConnectionMsg.setVisibility(View.VISIBLE);
                     mCountdown.setVisibility(View.VISIBLE);
+                    mTimerRunning = true;
+
+                    //This method requires the caller to hold the permission VIBRATE.
+                    // open shake sound track
+                    pairFragment.mSoundPool.play(mShakeAudio, 1, 1, 0, 0, 1);
+                    mTopLine.setVisibility(View.VISIBLE);
+                    mBottomLine.setVisibility(View.VISIBLE);
+                    startAnimation(false);// animation of split the shakehand picture into 2
+
 
 
                     mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
@@ -329,13 +331,7 @@ public class PairFragment extends Fragment implements SensorEventListener {
 
                     }.start();
 
-                    mTimerRunning = true;
-                    //This method requires the caller to hold the permission VIBRATE.
-                    // open shake sound track
-                    pairFragment.mSoundPool.play(mShakeAudio, 1, 1, 0, 0, 1);
-                    mTopLine.setVisibility(View.VISIBLE);
-                    mBottomLine.setVisibility(View.VISIBLE);
-                    startAnimation(false);// animation of split the shakehand picture into 2
+
                     break;
             }
 
@@ -367,7 +363,7 @@ public class PairFragment extends Fragment implements SensorEventListener {
                                 //TODO
                                 JSONObject data = response.getJSONObject(General.HTTP_DATA_KEY);
                                 eventStatus = data.getBoolean(General.EVENTSTATUS);
-//                                finish();
+
                                 break;
                             case General.HTTP_EXCEPTION:
                                 General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
@@ -386,6 +382,22 @@ public class PairFragment extends Fragment implements SensorEventListener {
         }
     }
 
+    private void shakePaired(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage("Do you want to pair now?")
+                .setPositiveButton(R.string.yes, (dialog, id) -> {
+                    // create a event now
+
+                    dialog.dismiss();
+                })
+                .setNegativeButton(R.string.cancel, (dialog, id) -> {
+                    // User cancelled the dialog
+
+                    dialog.dismiss();
+                });
+
+        builder.create();
+    }
 //    private void finish(){
 //        ((EventActivity) ActivityManager.getAc(master)).finish();
 //    }

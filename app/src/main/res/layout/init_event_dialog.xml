@@ -17,16 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:textSize="25sp"
-                android:textAlignment="center"
-                android:text="@string/init_event_title"
-                android:textStyle="bold"/>
-
             <ImageView
                 android:id="@+id/close"
                 android:layout_width="24dp"
@@ -41,11 +31,12 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <ImageView
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginRight="5dp"
                 android:layout_marginLeft="15dp"
                 android:src="@mipmap/temp_activity"
                 android:id="@+id/imageType"/>
@@ -60,9 +51,9 @@
 
                 <Spinner
                     android:id="@+id/type"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     android:layout_marginTop="5dp" />
 
@@ -81,7 +72,7 @@
                         android:id="@+id/location"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
+                        android:textSize="14sp"
                         android:text="daadsadadad"/>
 
                 </LinearLayout>
