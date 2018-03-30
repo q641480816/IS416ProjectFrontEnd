@@ -102,6 +102,10 @@ public class EventActivity extends AppCompatActivity {
         return myHandler;
     }
 
+    public void finishThisForResult(){
+
+    }
+
     public void updateEvent(){
         try {
             General.httpRequest(mContext, General.HTTP_GET, "/event/" + this.event.getId(),null,false, new JsonHttpResponseHandler(){

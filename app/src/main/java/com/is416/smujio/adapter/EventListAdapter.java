@@ -70,6 +70,16 @@ public class EventListAdapter extends BaseAdapter{
         notifyDataSetChanged();
     }
 
+    public void removeOne(long id){
+        for(int i = 0; i < events.size(); i++){
+            if (events.get(i).getId() == id){
+                events.remove(i);
+                break;
+            }
+        }
+        notifyDataSetChanged();
+    }
+
     public void update(ArrayList<Event> arrayList){
         this.events = arrayList;
         notifyDataSetChanged();

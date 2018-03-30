@@ -349,7 +349,6 @@ public class PairFragment extends Fragment implements SensorEventListener {
                             case General.HTTP_SUCCESS:
                                 //TODO
                                 JSONObject data = response.getJSONObject(General.HTTP_DATA_KEY);
-                                System.out.println(data);
                                 eventStatus = data.getBoolean(General.EVENTSTATUS);
 
                                 break;

@@ -244,7 +244,6 @@ public class ProfileActivity extends AppCompatActivity {
             body.put(General.NICKNAME,nickname);
             body.put(General.AVATAR, avatar);
             body.put(General.GENDER, gender);
-            System.out.println(body);
             General.httpRequest(mContext, General.HTTP_PUT, "/user",body,false, new JsonHttpResponseHandler(){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

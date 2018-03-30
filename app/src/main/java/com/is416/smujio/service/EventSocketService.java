@@ -100,13 +100,12 @@ public class EventSocketService extends Service {
         private static final int NORMAL_CLOSURE_STATUS = 1000;
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
-            System.out.println("Connected");
+            //System.out.println("Connected");
             webSocket.send(General.SOCKETREGISTER + ":" + account_id);
         }
         @Override
         public void onMessage(WebSocket webSocket, String text) {
             String[] params = text.split(":");
-            System.out.println(text);
             switch (params[0]){
                 case General.SOCKETUPDATE:
                     updateEvent();
@@ -116,6 +115,9 @@ public class EventSocketService extends Service {
                     break;
                 case General.SOCKETADDNEWEVENT:
                     addEvent(Long.parseLong(params[1]));
+                    break;
+                case General.SOCKETREMOVE:
+                    removeEvent(Long.parseLong(params[1]));
                     break;
             }
         }
@@ -130,13 +132,13 @@ public class EventSocketService extends Service {
         }
 
         public void closeEvent(){
-            pushNotification("Event closed", "The Owner Has Closed this Event.");
+            pushNotification("Event closed", "The Owner Has Closed This Event.");
             if (ActivityManager.isRunning() && General.isForeground){
                 (ActivityManager.getAc(EventActivity.name)).finish();
             }
         }
 
-        public void addEvent(long id){
+        private void addEvent(long id){
             if (ActivityManager.isRunning()){
                 if (((JioActivity)ActivityManager.getAc(JioActivity.name)).isInit){
                     if (((JioActivity)ActivityManager.getAc(JioActivity.name)).isOnTop){
@@ -148,7 +150,18 @@ public class EventSocketService extends Service {
                         }
                     }
                 }
+            }
+        }
 
+        private void removeEvent(long id){
+            if (ActivityManager.isRunning()){
+                if (((JioActivity)ActivityManager.getAc(JioActivity.name)).isInit){
+                    if (((JioActivity)ActivityManager.getAc(JioActivity.name)).isOnTop){
+                        General.UIHandler.post(() -> ((JioActivity)ActivityManager.getAc(JioActivity.name)).removeOneEvent(id));
+                    }else{
+                        JioActivity.pendingRemoveActivity.add(id);
+                    }
+                }
             }
         }
 

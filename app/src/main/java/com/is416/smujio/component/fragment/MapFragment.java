@@ -42,6 +42,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -58,6 +61,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private int MOCK_SIDE_WIDTH;
 
     private HashMap<Marker, Event> marker_info;
+    private HashMap<Long,Event> events = new HashMap<>();
     private Location myLastKnownLocation;
     private View mainView;
     private GoogleMap mGoogleMap;
@@ -178,9 +182,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
     private void init_event_list(double la, double lo){
-        mGoogleMap.clear();
-        marker_info.clear();
-        ArrayList<Event> events = new ArrayList<>();
         StringBuffer url = new StringBuffer();
         url.append("/event/all/");
         url.append(la);
@@ -198,15 +199,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                                 for (int i = 0; i < data.length(); i ++){
                                     Event e = Event.JsonToObject(data.getJSONObject(i));
                                     if (e.getId() != General.user.getAccountId()) {
-                                        events.add(e);
-                                        MarkerOptions markerOption = new MarkerOptions().position(new LatLng(e.getLatitude(), e.getLongitude()));
-                                        //Custom icon
-                                        markerOption.icon(BitmapDescriptorFactory.fromResource(General.getMarker(e.getType())));
-                                        Marker currentMarker = mGoogleMap.addMarker(markerOption);
-                                        marker_info.put(currentMarker, e);
+                                        events.put(e.getId(),e);
                                     }
                                 }
-                                eventListAdapter.update(events);
+                                init_events_content();
                                 break;
                             case General.HTTP_EXCEPTION:
                                 General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
@@ -228,6 +224,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void init_events_content(){
+        mGoogleMap.clear();
+        marker_info.clear();
+        ArrayList<Event> es = new ArrayList<>();
+        es.addAll(events.values());
+        for (int i = 0; i < es.size(); i ++){
+            Event e = es.get(i);
+            MarkerOptions markerOption = new MarkerOptions().position(new LatLng(e.getLatitude(), e.getLongitude()));
+            //Custom icon
+            markerOption.icon(BitmapDescriptorFactory.fromResource(General.getMarker(e.getType())));
+            Marker currentMarker = mGoogleMap.addMarker(markerOption);
+            marker_info.put(currentMarker, e);
+        }
+
+        eventListAdapter.update(es);
     }
 
     @Override
@@ -297,6 +310,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         init_event_list(location.getLatitude(),location.getLongitude());
     }
 
+    public void removeOneEvent(long id){
+        if (this.events.containsKey(id)) {
+            this.events.remove(id);
+            init_events_content();
+        }
+    }
+
     public void update_one_event(long id){
         try {
             General.httpRequest(mContext, General.HTTP_GET, "/event/" + id,null,false, new JsonHttpResponseHandler(){
@@ -308,6 +328,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                             case General.HTTP_SUCCESS:
                                 Event e = Event.JsonToObject(response.getJSONObject(General.HTTP_DATA_KEY));
                                 if (e.getId() != General.user.getAccountId()) {
+                                    events.put(e.getId(), e);
                                     MarkerOptions markerOption = new MarkerOptions().position(new LatLng(e.getLatitude(), e.getLongitude()));
                                     //Custom icon
                                     markerOption.icon(BitmapDescriptorFactory.fromResource(General.getMarker(e.getType())));

@@ -49,6 +49,7 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
     public boolean isInit = false;
     public boolean isOnTop = false;
     public static List<Long> pendingActivity = new ArrayList<>();
+    public static List<Long> pendingRemoveActivity = new ArrayList<>();
 
     private LocationManager locationManager;
     private JioFragmentPagerAdapter jioFragmentPagerAdapter;
@@ -208,19 +209,19 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
 
     @Override
     public void onProviderEnabled(String s) {
-        System.out.println("en");
         if (isInit){
             this.fallback_window.setVisibility(View.GONE);
             this.main_window.setVisibility(View.VISIBLE);
         }else {
-            init();
-            addListeners();
+            if (isOnTop){
+                init();
+                addListeners();
+            }
         }
     }
 
     @Override
     public void onProviderDisabled(String s) {
-        System.out.println("dis");
         this.fallback_window.setVisibility(View.VISIBLE);
         this.main_window.setVisibility(View.GONE);
     }
@@ -284,6 +285,10 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
         } else if (pendingActivity.size() > 0){
             this.jioFragmentPagerAdapter.update_event_one(pendingActivity.get(0));
         }
+
+        for(long id : pendingRemoveActivity){
+            removeOneEvent(id);
+        }
     }
 
     @Override
@@ -307,6 +312,19 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
         super.onPause();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == EVENT_DETAIL_REQUEST_CODE){
+            if (isInit) {
+                this.updateAllEvent();
+            }else {
+                init();
+                addListeners();
+            }
+        }
+    }
+
     @SuppressLint("RestrictedApi")
     private void showPopupMenu(final Context context, View ancher) {
         PopupMenu popupMenu = new PopupMenu(context, ancher);
@@ -318,7 +336,7 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
                     startActivity(it);
                     break;
                 case R.id.menu_setting:
-                    System.out.println("setting");
+                    //System.out.println("setting");
                     break;
             }
             return true;
@@ -355,5 +373,13 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
 
     public void updateOneEvent(long id){
         this.jioFragmentPagerAdapter.update_event_one(id);
+    }
+
+    public void updateAllEvent(){
+        this.jioFragmentPagerAdapter.update_event_list();
+    }
+
+    public void removeOneEvent(long id){
+        this.jioFragmentPagerAdapter.removeOneEvent(id);
     }
 }

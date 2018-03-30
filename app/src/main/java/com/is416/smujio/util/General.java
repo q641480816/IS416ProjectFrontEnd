@@ -123,6 +123,7 @@ public class General {
     public static final String SOCKETUPDATE = "update";
     public static final String SOCKETCLOSE = "close";
     public static final String SOCKETADDNEWEVENT = "add";
+    public static final String SOCKETREMOVE = "remove";
 
     public static void makeToast(Context c, String message){
         Toast.makeText(c, message, Toast.LENGTH_LONG).show();

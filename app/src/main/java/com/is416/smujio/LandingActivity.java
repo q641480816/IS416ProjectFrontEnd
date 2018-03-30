@@ -292,8 +292,23 @@ public class LandingActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults.length > 0){
+        boolean isOk = true;
+        for (int g : grantResults){
+            if (g != PackageManager.PERMISSION_GRANTED){
+                isOk = false;
+            }
+        }
+        if (isOk){
             start_main(false);
+        }else {
+            General.makeToast(mContext, "We require your location permission!");
+            Timer t = new Timer();
+            t.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 3000);
         }
     }
 

@@ -76,4 +76,8 @@ public class JioFragmentPagerAdapter extends FragmentPagerAdapter {
     public void update_event_one(long id){
         this.mapFragment.update_one_event(id);
     }
+
+    public void removeOneEvent(long id){
+        this.mapFragment.removeOneEvent(id);
+    }
 }
