@@ -1,6 +1,7 @@
 package com.is416.smujio.component.fragment;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -26,8 +27,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.is416.smujio.EventActivity;
 import com.is416.smujio.JioActivity;
 import com.is416.smujio.R;
+import com.is416.smujio.component.dialog.InitEventDialog;
 import com.is416.smujio.util.ActivityManager;
 import com.is416.smujio.util.General;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -86,6 +89,7 @@ public class PairFragment extends Fragment implements SensorEventListener {
     private Geocoder geocoder;
     private boolean lastCall = false;
     private boolean eventStatus = false;
+    private String master = "SHAKE";
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -94,12 +98,10 @@ public class PairFragment extends Fragment implements SensorEventListener {
 
         init();
         bindView();
-        addListener();
+//        addListener();
 
         return mainView;
     }
-
-
 
     private void bindView() {
         mTopLayout = mainView.findViewById(R.id.main_linear_top);
@@ -119,7 +121,20 @@ public class PairFragment extends Fragment implements SensorEventListener {
     }
 
     private void addListener() {
-        
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage("Do you want to pair now?")
+                .setPositiveButton(R.string.yes, (dialog, id) -> {
+                    // create a event now
+
+                    dialog.dismiss();
+                })
+                .setNegativeButton(R.string.cancel, (dialog, id) -> {
+                    // User cancelled the dialog
+
+                    dialog.dismiss();
+                });
+
+
     }
 
     private void init() {
@@ -212,14 +227,11 @@ public class PairFragment extends Fragment implements SensorEventListener {
                 Thread thread = new Thread() {
                     @Override
                     public void run() {
-
                         super.run();
                         try {
                             //start vibrate, open shake sound track and show animation effect
                             mHandler.obtainMessage(START_SHAKE).sendToTarget();
-                            Thread.sleep(0);
-
-                        } catch (InterruptedException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -229,7 +241,6 @@ public class PairFragment extends Fragment implements SensorEventListener {
 
         }
     }
-
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -280,23 +291,24 @@ public class PairFragment extends Fragment implements SensorEventListener {
                     mAVI.setVisibility(View.VISIBLE);
                     mConnectionMsg.setVisibility(View.VISIBLE);
                     mCountdown.setVisibility(View.VISIBLE);
-                    //
+
+
                     mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
                         @Override
                         public void onTick(long millisUntilFinished) {
-                            shakeJoin();
                             if (eventStatus) {
-                                //show pop up
-                                General.makeToast(mContext,"paired");
-                                onFinish();
-                            }
-                            else{
-                                if(millisUntilFinished == 1000){
+                                System.out.print("Paired");
+                                mCountDownTimer.cancel();
+                            } else {
+                                shakeJoin();
+
+                                mTimeLeftInMillis = millisUntilFinished;
+                                updateCountDownText();
+
+                                if (millisUntilFinished == 1000) {
                                     lastCall = true;
                                 }
                             }
-                            mTimeLeftInMillis = millisUntilFinished;
-                            updateCountDownText();
                         }
 
                         @Override
@@ -309,10 +321,14 @@ public class PairFragment extends Fragment implements SensorEventListener {
                             startAnimation(true);
 
                             mTimeLeftInMillis = START_TIME_IN_MILLIS;
+
+                            if (eventStatus) {
+                                System.out.print("testing");
+                            }
                         }
 
-
                     }.start();
+
                     mTimerRunning = true;
                     //This method requires the caller to hold the permission VIBRATE.
                     // open shake sound track
@@ -322,6 +338,7 @@ public class PairFragment extends Fragment implements SensorEventListener {
                     startAnimation(false);// animation of split the shakehand picture into 2
                     break;
             }
+
         }
     }
 
@@ -350,7 +367,7 @@ public class PairFragment extends Fragment implements SensorEventListener {
                                 //TODO
                                 JSONObject data = response.getJSONObject(General.HTTP_DATA_KEY);
                                 eventStatus = data.getBoolean(General.EVENTSTATUS);
-
+//                                finish();
                                 break;
                             case General.HTTP_EXCEPTION:
                                 General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
@@ -369,4 +386,7 @@ public class PairFragment extends Fragment implements SensorEventListener {
         }
     }
 
+//    private void finish(){
+//        ((EventActivity) ActivityManager.getAc(master)).finish();
+//    }
 }

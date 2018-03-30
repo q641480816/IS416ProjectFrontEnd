@@ -50,6 +50,7 @@ public class InitEventDialog extends Dialog implements AdapterView.OnItemSelecte
     private TextView location;
     private LoadingButton init_bt;
     private ImageView close;
+    private ImageView imageType;
     private EventTypeSpinnerAdapter eventTypeSpinnerAdapter;
     private Geocoder geocoder;
 
@@ -93,6 +94,7 @@ public class InitEventDialog extends Dialog implements AdapterView.OnItemSelecte
         this.location = findViewById(R.id.location);
         this.init_bt = findViewById(R.id.init);
         this.close = findViewById(R.id.close);
+        this.imageType = findViewById(R.id.imageType);
     }
 
     private void init(){
@@ -105,6 +107,9 @@ public class InitEventDialog extends Dialog implements AdapterView.OnItemSelecte
         type.setOnItemSelectedListener(this);
         type.setSelection(0);
         init_bt.setText(mContext.getResources().getString(R.string.init_event_start));
+        this.imageType.setImageResource(General.getMarker("DATE"));
+
+
         Thread tN = new Thread(this);
         tN.run();
     }
@@ -164,6 +169,7 @@ public class InitEventDialog extends Dialog implements AdapterView.OnItemSelecte
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         this.selectedType = ((TextView)view.findViewById(R.id.type)).getText().toString();
+        this.imageType.setImageResource(General.getMarker(this.selectedType));
     }
 
     @Override
