@@ -26,15 +26,15 @@ public class EventTypeSpinnerAdapter extends BaseAdapter {
         this.mContext = mContext;
         this.types = new ArrayList<>();
 
-
+        types.add("DATE");
         types.add("DINE");
         types.add("DRINK");
-        types.add("LOVE");
         types.add("MOVIE");
         types.add("PROJECT");
         types.add("STUDY");
 
     }
+
 
     @Override
     public int getCount() {

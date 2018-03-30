@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -46,6 +47,8 @@ public class EventMainFragment extends Fragment{
     private TextView location;
     private TextView members;
     private TextView leave;
+    private TextView eventType;
+    private ImageView imageView;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mainView = inflater.inflate(R.layout.event_main_fragment, container, false);
@@ -55,6 +58,7 @@ public class EventMainFragment extends Fragment{
         bindView();
         init();
         addListener();
+
         return mainView;
     }
 
@@ -63,6 +67,8 @@ public class EventMainFragment extends Fragment{
         this.location = mainView.findViewById(R.id.location);
         this.members = mainView.findViewById(R.id.group_size);
         this.leave = mainView.findViewById(R.id.leave);
+        this.imageView = mainView.findViewById(R.id.imageType);
+        this.eventType = mainView.findViewById(R.id.eventType);
     }
 
     private void init(){
@@ -71,6 +77,8 @@ public class EventMainFragment extends Fragment{
         this.user_list.setAdapter(this.memberListAdapter);
         this.location.setText(this.event.getLocation());
         this.members.setText(" " + this.event.getParticipantsCount());
+        this.imageView.setImageResource(General.getMarker(this.event.getType()));
+        this.eventType.setText(event.getType());
     }
 
     private void addListener(){
