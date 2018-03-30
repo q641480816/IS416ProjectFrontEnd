@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -44,6 +45,7 @@ public class ProfileActivity extends AppCompatActivity {
     private Context mContext;
     public static final String name = "PROFILE";
     public static final int REQUEST_CODE_CHOOSE_AVATAR = 1242;
+    public static final int PROFILE_REQUEST_PERMISSION = 7765;
 
     private TextView email;
     private EditText nickname;
@@ -167,13 +169,11 @@ public class ProfileActivity extends AppCompatActivity {
             showPopupMenu(mContext, v);
         });
         this.edit_avatar.setOnClickListener(v -> {
-            Matisse.from(ProfileActivity.this)
-                    .choose(MimeType.allOf())
-                    .theme(R.style.Matisse_Dracula)
-                    .countable(false)
-                    .maxSelectable(1)
-                    .imageEngine(new PicassoEngine())
-                    .forResult(REQUEST_CODE_CHOOSE_AVATAR);
+            if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, this.PROFILE_REQUEST_PERMISSION);
+            }else {
+                chooseAvatar();
+            }
         });
         this.logout.setOnClickListener((v) -> {
             SharedPreferenceManager.save(General.PERSIST, SharedPreferenceManager.nullable , mContext);
@@ -227,6 +227,16 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    private void chooseAvatar(){
+        Matisse.from(ProfileActivity.this)
+                .choose(MimeType.allOf())
+                .theme(R.style.Matisse_Dracula)
+                .countable(false)
+                .maxSelectable(1)
+                .imageEngine(new PicassoEngine())
+                .forResult(REQUEST_CODE_CHOOSE_AVATAR);
+    }
+
     private void updateUser(View hide, View show, String nickname, String avatar, int gender){
         try {
             JSONObject body = new JSONObject();
@@ -267,6 +277,16 @@ public class ProfileActivity extends AppCompatActivity {
             });
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            chooseAvatar();
+        }else {
+            General.makeToast(mContext, "We need permission");
         }
     }
 

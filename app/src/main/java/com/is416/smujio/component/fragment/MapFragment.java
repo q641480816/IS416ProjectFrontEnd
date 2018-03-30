@@ -296,4 +296,45 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         Location location = ((JioActivity) ActivityManager.getAc(JioActivity.name)).getLastKnownLocation();
         init_event_list(location.getLatitude(),location.getLongitude());
     }
+
+    public void update_one_event(long id){
+        try {
+            General.httpRequest(mContext, General.HTTP_GET, "/event/" + id,null,false, new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    try {
+                        switch (response.getInt(General.HTTP_STATUS_KEY)){
+                            case General.HTTP_SUCCESS:
+                                Event e = Event.JsonToObject(response.getJSONObject(General.HTTP_DATA_KEY));
+                                if (e.getId() != General.user.getAccountId()) {
+                                    MarkerOptions markerOption = new MarkerOptions().position(new LatLng(e.getLatitude(), e.getLongitude()));
+                                    //Custom icon
+                                    markerOption.icon(BitmapDescriptorFactory.fromResource(General.getMarker(e.getType())));
+                                    Marker currentMarker = mGoogleMap.addMarker(markerOption);
+                                    marker_info.put(currentMarker, e);
+                                    eventListAdapter.updateOne(e);
+                                }
+                                break;
+                            case General.HTTP_EXCEPTION:
+                                General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
+                                break;
+                            case General.HTTP_FAIL:
+                                General.makeToast(mContext, response.getString(General.HTTP_MESSAGE_KEY));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                    General.makeToast(mContext, mContext.getResources().getText(R.string.unknown_error).toString());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

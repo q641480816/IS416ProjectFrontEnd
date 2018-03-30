@@ -30,6 +30,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -45,6 +47,8 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
     public static final String LOCATION_SERVICE = Context.LOCATION_SERVICE;
     public static String myProvider;
     public boolean isInit = false;
+    public boolean isOnTop = false;
+    public static List<Long> pendingActivity = new ArrayList<>();
 
     private LocationManager locationManager;
     private JioFragmentPagerAdapter jioFragmentPagerAdapter;
@@ -274,6 +278,12 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
     protected void onResume() {
         super.onResume();
         this.setLocationService(true);
+        this.isOnTop = true;
+        if (pendingActivity.size() > 1){
+            this.jioFragmentPagerAdapter.update_event_list();
+        } else if (pendingActivity.size() > 0){
+            this.jioFragmentPagerAdapter.update_event_one(pendingActivity.get(0));
+        }
     }
 
     @Override
@@ -293,6 +303,7 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
         }catch (Exception e){
             e.printStackTrace();
         }
+        this.isOnTop = false;
         super.onPause();
     }
 
@@ -340,5 +351,9 @@ public class JioActivity extends AppCompatActivity implements ViewPager.OnPageCh
 
     public void updateMenuState(boolean isVisible){
         this.options.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    public void updateOneEvent(long id){
+        this.jioFragmentPagerAdapter.update_event_one(id);
     }
 }

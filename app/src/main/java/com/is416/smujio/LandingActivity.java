@@ -247,7 +247,7 @@ public class LandingActivity extends AppCompatActivity {
                                 }
 
                                 if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                    ActivityCompat.requestPermissions(this_ac, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, JioActivity.EVENT_DETAIL_REQUEST_CODE);
+                                    ActivityCompat.requestPermissions(this_ac, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE}, JioActivity.EVENT_DETAIL_REQUEST_CODE);
                                 }else {
                                     start_main(isTimer);
                                 }

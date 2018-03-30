@@ -38,7 +38,7 @@ public class User {
     public User(long accountId, String email, String nickName, Date dateOfBirth, int gender, Date date, String avatar, int inEventStatus){
         this.accountId = accountId;
         this.email = email;
-        this.nickName = nickName == null ? "Edit Nick Name" : nickName;
+        this.nickName = nickName == null ? "User_" + accountId : nickName;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
         this.date = date;

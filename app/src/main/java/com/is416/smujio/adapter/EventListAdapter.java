@@ -65,6 +65,11 @@ public class EventListAdapter extends BaseAdapter{
         return view;
     }
 
+    public void updateOne(Event event){
+        this.events.add(event);
+        notifyDataSetChanged();
+    }
+
     public void update(ArrayList<Event> arrayList){
         this.events = arrayList;
         notifyDataSetChanged();

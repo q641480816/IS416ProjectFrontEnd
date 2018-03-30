@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.os.IBinder;
 
 import com.is416.smujio.EventActivity;
+import com.is416.smujio.JioActivity;
 import com.is416.smujio.LandingActivity;
 import com.is416.smujio.R;
 import com.is416.smujio.model.Event;
@@ -105,12 +106,16 @@ public class EventSocketService extends Service {
         @Override
         public void onMessage(WebSocket webSocket, String text) {
             String[] params = text.split(":");
+            System.out.println(text);
             switch (params[0]){
                 case General.SOCKETUPDATE:
                     updateEvent();
                     break;
                 case General.SOCKETCLOSE:
-
+                    closeEvent();
+                    break;
+                case General.SOCKETADDNEWEVENT:
+                    addEvent(Long.parseLong(params[1]));
                     break;
             }
         }
@@ -120,12 +125,30 @@ public class EventSocketService extends Service {
             if (!ActivityManager.isRunning() || !General.isForeground){
                 pushNotification("Event Update", "Updates!!!!!");
             }else {
-                ((EventActivity)ActivityManager.getAc(EventActivity.name)).getMyHandler().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        ((EventActivity)ActivityManager.getAc(EventActivity.name)).updateEvent();
+                ((EventActivity)ActivityManager.getAc(EventActivity.name)).getMyHandler().post(() -> ((EventActivity)ActivityManager.getAc(EventActivity.name)).updateEvent());
+            }
+        }
+
+        public void closeEvent(){
+            pushNotification("Event closed", "The Owner Has Closed this Event.");
+            if (ActivityManager.isRunning() && General.isForeground){
+                (ActivityManager.getAc(EventActivity.name)).finish();
+            }
+        }
+
+        public void addEvent(long id){
+            if (ActivityManager.isRunning()){
+                if (((JioActivity)ActivityManager.getAc(JioActivity.name)).isInit){
+                    if (((JioActivity)ActivityManager.getAc(JioActivity.name)).isOnTop){
+                        General.UIHandler.post(() -> ((JioActivity)ActivityManager.getAc(JioActivity.name)).updateOneEvent(id));
+                    }else{
+                        JioActivity.pendingActivity.add(id);
+                        if (JioActivity.pendingActivity.size() > 1){
+                            pushNotification("New event","New events around you");
+                        }
                     }
-                });
+                }
+
             }
         }
 

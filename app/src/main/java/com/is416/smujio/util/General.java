@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.location.Location;
+import android.os.Handler;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -52,6 +53,7 @@ public class General {
     public static User user;
     public static Event currentEvent;
     public static boolean isForeground = false;
+    public static Handler UIHandler = new Handler();
 
     //Keys!!!!!!!!!!!!!!!!!!!!!!!
     public static final String PERSIST = "PERSIST";
@@ -120,6 +122,7 @@ public class General {
     public static final String SOCKETUNREGISTER = "unregister";
     public static final String SOCKETUPDATE = "update";
     public static final String SOCKETCLOSE = "close";
+    public static final String SOCKETADDNEWEVENT = "add";
 
     public static void makeToast(Context c, String message){
         Toast.makeText(c, message, Toast.LENGTH_LONG).show();
