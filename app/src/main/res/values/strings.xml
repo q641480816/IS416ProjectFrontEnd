@@ -1,3 +1,49 @@
 <resources>
-    <string name="app_name">SMUJio</string>
+    <string name="app_name">Jio</string>
+
+    <!-- Common -->
+    <string name="unknown_error">Unknown Error</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+
+    <!--main menu-->
+    <string name="profile">Profile</string>
+    <string name="setting">Setting</string>
+
+    <!-- landing -->
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="email_title">Email</string>
+    <string name="email_hint">Email address</string>
+    <string name="password_title">Password</string>
+    <string name="password_hint">Password</string>
+    <string name="switch_action_new">Existing User</string>
+    <string name="switch_action_exist">New User</string>
+
+    <string name="tab_menu_map">Map</string>
+    <string name="tab_menu_pair">Shake</string>
+
+    <!--Jio main-->
+    <string name="no_location_provider_warning_1">Cannot find your location!</string>
+    <string name="no_location_provider_warning_2">Please turn on your Location Services. For best experience, please set it to High Accuracy!</string>
+    <string name="no_location_provider_warning_3">TURN IT ON</string>
+    <!--<string name="no_location_provider_warning_2">Asshole!!! ( ╯-_-)╯┴—┴</string>-->
+    <!--join event dialog-->
+    <string name="join_event_title">Join Event!</string>
+    <!--init event dialog-->
+    <string name="init_event_start">Start Event!</string>
+
+    <!-- event -->
+    <string name="event_leave_group_title">Leave Group</string>
+    <string name="event_leave_group_body">Are you sure you want to Leave this Group?</string>
+    <string name="event_leave_group_body_admin">Are you sure you want to Leave and dismiss this Group?</string>
+
+    <!--profile-->
+    <string name="profile_logout">Logout</string>
+    <string name="profile_email">Email</string>
+    <string name="profile_nick_name">Nick Name</string>
+    <string name="profile_gender">Gender</string>
+    <string name="profile_gender_male">Male</string>
+    <string name="profile_gender_female">Female</string>
 </resources>

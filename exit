@@ -1,0 +1,285 @@
+[33mcommit f4276fa6e5fa9f00209a197bafe9d2d3509ac823[m[33m ([m[1;36mHEAD -> [m[1;32mdev[m[33m)[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Fri Mar 30 13:33:13 2018 +0800
+
+    add
+
+[33mcommit ff6b78d9eed8e7b7719de711500f11de4a16081c[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Fri Mar 30 00:01:52 2018 +0800
+
+    fix
+
+[33mcommit 5fbc1738353c7b2b0fcb0bbbaeb2279e491c2730[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Thu Mar 29 23:55:53 2018 +0800
+
+    add
+
+[33mcommit 44cbb726fcc5749cf811ac957c20b660572cad6e[m
+Merge: 324fb1f 33a323b
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Thu Mar 29 12:54:48 2018 +0800
+
+    Merge branch 'shake' of https://github.com/q641480816/IS416ProjectFrontEnd into dev
+
+[33mcommit 324fb1f776e0d0c2580144ffacd6e043a70691a4[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Thu Mar 29 10:47:15 2018 +0800
+
+    add
+
+[33mcommit 33a323bb1f0185336ed9f666b1df9f5da6a14109[m
+Author: PETERLU <jianan.lu.2015@smu.edu.sg>
+Date:   Thu Mar 29 00:28:37 2018 +0800
+
+    Updata Shake
+
+[33mcommit 914fc21fce4f303ce5f36d6fdf2d1b067c3ea5d8[m
+Author: PETERLU <jianan.lu.2015@smu.edu.sg>
+Date:   Wed Mar 28 20:35:43 2018 +0800
+
+    Update the UI and import the new icons
+
+[33mcommit 6fc8ddfc147a9bec9ff6ef677cc29747fdd93d6a[m
+Merge: 1b10828 5cfc42c
+Author: PETERLU <jianan.lu.2015@smu.edu.sg>
+Date:   Wed Mar 28 20:19:56 2018 +0800
+
+    Merge branch 'dev' of https://github.com/q641480816/IS416ProjectFrontEnd into shake
+
+[33mcommit 5cfc42cdc97b52fab24cb601c8071be66f491b0b[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Wed Mar 28 20:09:22 2018 +0800
+
+    fix bug
+
+[33mcommit 8f872f911a5f4a3d11cf64f2e74f3893feb8ad01[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Wed Mar 28 18:46:52 2018 +0800
+
+    add
+
+[33mcommit 2285dde6ff863f1aec186db29d35c497d180b216[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Wed Mar 28 18:16:20 2018 +0800
+
+    temp
+
+[33mcommit a62901f6a7eca6133db1ed3817597ba472e03eab[m
+Merge: 3a5d9ef ffcd6e6
+Author: Gods <q641480816@gmail.com>
+Date:   Wed Mar 28 17:28:37 2018 +0800
+
+    Merge pull request #8 from q641480816/profile
+    
+    Profile
+
+[33mcommit ffcd6e64cf2eca27f64ff2b4bab66e38ba56fcaf[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Wed Mar 28 17:27:41 2018 +0800
+
+    add
+
+[33mcommit 1b10828ae7c5b942c8402fc959f4aa382e01bf25[m
+Merge: 66544bf 89e1ea7
+Author: PETERLU <jianan.lu.2015@smu.edu.sg>
+Date:   Wed Mar 28 15:45:15 2018 +0800
+
+    Merge branch 'profile' of https://github.com/q641480816/IS416ProjectFrontEnd into shake
+
+[33mcommit 89e1ea782503b6838b5a4f123d35fb76b9575318[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Wed Mar 28 15:41:13 2018 +0800
+
+    add
+
+[33mcommit 66544bf8c75dd1c998b3fa10ab1dd3849b596fac[m
+Author: PETERLU <jianan.lu.2015@smu.edu.sg>
+Date:   Wed Mar 28 15:33:32 2018 +0800
+
+    Update Google map function!
+
+[33mcommit ff15b1732ae2e6932c27958677799a8089ef2dd6[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Mon Mar 26 10:52:17 2018 +0800
+
+    draft fo profile
+
+[33mcommit 8ca17e1bc86f35e8db54a0be37f82f8dea5c908b[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Sun Mar 25 20:30:30 2018 +0800
+
+    add sth
+
+[33mcommit 9ae8e8391833bbc018be354d07059c454dbb0472[m
+Merge: 62f17a3 3a5d9ef
+Author: PETERLU <jianan.lu.2015@smu.edu.sg>
+Date:   Sun Mar 25 19:34:04 2018 +0800
+
+    Merge branch 'dev' of https://github.com/q641480816/IS416ProjectFrontEnd into shake
+
+[33mcommit 0b53893a979832c3c6b2925d6972d775bed1a1f5[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Sun Mar 25 19:06:02 2018 +0800
+
+    fix bug
+
+[33mcommit 3a5d9efdc3913312161aa706f0ad6471f2251b19[m
+Merge: 4d7ab4e 2e7ab2a
+Author: Gods <q641480816@gmail.com>
+Date:   Sun Mar 25 16:24:46 2018 +0800
+
+    Merge pull request #7 from q641480816/profile
+    
+    add location checker
+
+[33mcommit 2e7ab2ae4625f9b782092593e6ec9f470453b4d5[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Sun Mar 25 16:23:45 2018 +0800
+
+    add location checker
+
+[33mcommit 4d7ab4ecb100a9e17fb50110921ffde8a636d12e[m
+Merge: 31cbd0b d0b52e5
+Author: Gods <q641480816@gmail.com>
+Date:   Sat Mar 24 15:40:05 2018 +0800
+
+    Merge pull request #6 from q641480816/map_final
+    
+    Map final
+
+[33mcommit 62f17a3f19df9e0b744ed12d014472d8032acedc[m
+Merge: de5f8a2 d0b52e5
+Author: PETERLU <jianan.lu.2015@smu.edu.sg>
+Date:   Sat Mar 24 15:35:03 2018 +0800
+
+    Merge branch 'map_final' of https://github.com/q641480816/IS416ProjectFrontEnd into shake
+    
+    # Conflicts:
+    #       app/src/debug/res/values/google_maps_api.xml
+
+[33mcommit de5f8a2c7e368804d72194bf5d64e0620fe81808[m
+Author: PETERLU <jianan.lu.2015@smu.edu.sg>
+Date:   Sat Mar 24 15:33:13 2018 +0800
+
+    Fix shake
+
+[33mcommit d0b52e5d7d187d58fa1a55bf6a0bb517b3225d0a[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Sat Mar 24 15:28:25 2018 +0800
+
+    add permission
+
+[33mcommit 9c86c4147f8dfb4b8e7877f0970666abdd007512[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Sat Mar 24 14:15:07 2018 +0800
+
+    add
+
+[33mcommit c722d143ff6937c0380b68906d0f9449cac5567b[m
+Author: PETERLU <jianan.lu.2015@smu.edu.sg>
+Date:   Sat Mar 24 12:31:46 2018 +0800
+
+    Update Shake Function with countdown timer
+
+[33mcommit 5d78217de52d3a091aa22964d3d37aebb6f4ffff[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Mon Mar 19 17:38:14 2018 +0800
+
+    add function
+
+[33mcommit 31cbd0bcdd4d8c4710d6180d43dae7d6fff5a5be[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Mon Mar 19 16:59:15 2018 +0800
+
+    remove
+
+[33mcommit 2a06f5b6c942d9e263f1f6ea6696515d20508866[m
+Merge: b68ef2c 90a9844
+Author: Gods <q641480816@gmail.com>
+Date:   Mon Mar 19 16:54:16 2018 +0800
+
+    Merge pull request #5 from q641480816/map
+    
+    add
+
+[33mcommit 90a98449d3404130c77a74944d66f6655b6265df[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Mon Mar 19 16:53:38 2018 +0800
+
+    add
+
+[33mcommit b68ef2c121fd1d27d61ca1d941f3aa630f0556c4[m
+Merge: df40bf5 d40eff8
+Author: Gods <q641480816@gmail.com>
+Date:   Mon Mar 19 16:52:27 2018 +0800
+
+    Merge pull request #4 from q641480816/map
+    
+    Map
+
+[33mcommit d40eff811790d08aa6643fef2b506ee129cf9d34[m
+Merge: 3687478 3d78d44
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Mon Mar 19 16:48:35 2018 +0800
+
+    fix conflict
+
+[33mcommit 3687478128170bf7fcc2618e6f025742c983afcb[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Mon Mar 19 16:43:51 2018 +0800
+
+    add function pull
+
+[33mcommit 3d78d4437379600f319c06fa4c825feb137145bf[m
+Author: PETERLU <jianan.lu.2015@smu.edu.sg>
+Date:   Mon Mar 19 16:41:58 2018 +0800
+
+    fix shake function bugs
+
+[33mcommit 94c213256f76553cf57d39568610ad4bf1b20eda[m
+Merge: 451b627 36e504b
+Author: PETERLU <jianan.lu.2015@smu.edu.sg>
+Date:   Mon Mar 19 12:03:47 2018 +0800
+
+    Merge branch 'shake' of https://github.com/q641480816/IS416ProjectFrontEnd into shake
+
+[33mcommit 451b627f154819d0256eafa42d70112c837825b5[m
+Author: PETERLU <jianan.lu.2015@smu.edu.sg>
+Date:   Mon Mar 19 12:02:17 2018 +0800
+
+    Creation of shake function in SensorActivity which is called by PairFragment.
+    Image materials and sound track.
+    Update google_maps_api for API KEY(It expired on my side)
+    Modified pair_fragment.xml to add in UI feature for shake function
+    Modified AndroidManifest to add permission for vibrate
+
+[33mcommit 397941e8ed4184ef78d262b0c30999f432ac88e4[m
+Merge: 0b6c57a 1a836d0
+Author: PETERLU <jianan.lu.2015@smu.edu.sg>
+Date:   Sun Mar 18 21:28:53 2018 +0800
+
+    Merge branch 'map' of https://github.com/q641480816/IS416ProjectFrontEnd
+
+[33mcommit 0b6c57a79cd0a6b7f139ababf7e1c3445bb4b9f0[m
+Merge: 9eb9c3e df40bf5
+Author: PETERLU <jianan.lu.2015@smu.edu.sg>
+Date:   Sun Mar 18 17:55:42 2018 +0800
+
+    Merge branch 'dev' of https://github.com/q641480816/IS416ProjectFrontEnd
+
+[33mcommit 1a836d0f4c2d868cdcf5f0b6a33343bc5cab0613[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Fri Mar 16 14:18:50 2018 +0800
+
+    temp test api
+
+[33mcommit 1137028484b7f9c30eccba51ae100cb3a626e005[m
+Author: Liu jinlong <q641480816@gmail.com>
+Date:   Wed Mar 14 15:24:05 2018 +0800
+
+    add
+
+[33mcommit 039e8f94a091fa212c7afb16cec21570d2b95956[m
+Author: Liu jinlong <q6414808
